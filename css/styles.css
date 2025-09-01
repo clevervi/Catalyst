@@ -353,6 +353,7 @@ a:focus {
     border-left: 4px solid;
 }
 
+/* color alert */
 .alert-info {
     background-color: var(--info-lightest);
     color: var(--info-dark);
