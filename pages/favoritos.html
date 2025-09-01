@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Jobs - Catalyst</title>
+    <meta name="description" content="Manage your favorite jobs and saved opportunities in Catalyst HR System">
+    
+    <!-- CSS Framework and Styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Navigation will be loaded dynamically -->
+    
+    <main class="py-5" style="padding-top: 100px;">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h1 class="h3 mb-2">
+                                <i class="fas fa-heart text-primary me-2"></i>
+                                Favorite Jobs
+                            </h1>
+                            <p class="text-muted mb-0">Manage the job opportunities you have saved</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary" id="filterFavoritesBtn">
+                                <i class="fas fa-filter me-1"></i> Filter
+                            </button>
+                            <a href="empleos.html" class="btn btn-accent">
+                                <i class="fas fa-search me-1"></i> Search More Jobs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="row mb-4" id="filtersRow" style="display: none;">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="statusFilter" class="form-label">Status</label>
+                                    <select class="form-select" id="statusFilter">
+                                        <option value="">All</option>
+                                        <option value="active">Active</option>
+                                        <option value="applied">Applied</option>
+                                        <option value="expired">Expired</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="categoryFilter" class="form-label">Category</label>
+                                    <select class="form-select" id="categoryFilter">
+                                        <option value="">All</option>
+                                        <option value="frontend">Frontend</option>
+                                        <option value="backend">Backend</option>
+                                        <option value="fullstack">Full Stack</option>
+                                        <option value="data-science">Data Science</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="locationFilter" class="form-label">Location</label>
+                                    <select class="form-select" id="locationFilter">
+                                        <option value="">All</option>
+                                        <option value="remote">Remote</option>
+                                        <option value="bogota">Bogotá</option>
+                                        <option value="medellin">Medellín</option>
+                                        <option value="cali">Cali</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="sortFilter" class="form-label">Sort by</label>
+                                    <select class="form-select" id="sortFilter">
+                                        <option value="recent">Most recent</option>
+                                        <option value="oldest">Oldest</option>
+                                        <option value="salary">Salary</option>
+                                        <option value="company">Company</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="text-danger mb-2">
+                                <i class="fas fa-heart fa-2x"></i>
+                            </div>
+                            <h3 class="text-danger mb-1" id="totalFavorites">12</h3>
+                            <small class="text-muted">Total Favorites</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="text-success mb-2">
+                                <i class="fas fa-paper-plane fa-2x"></i>
+                            </div>
+                            <h3 class="text-success mb-1" id="appliedFavorites">7</h3>
+                            <small class="text-muted">Already Applied</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="text-warning mb-2">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                            <h3 class="text-warning mb-1" id="pendingFavorites">3</h3>
+                            <small class="text-muted">Expiring Soon</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="text-info mb-2">
+                                <i class="fas fa-star fa-2x"></i>
+                            </div>
+                            <h3 class="text-info mb-1" id="matchScore">92</h3>
+                            <small class="text-muted">% Match</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favorites List -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-bookmark me-2"></i>
+                                My Saved Jobs
+                            </h5>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-danger" id="removeSelectedBtn" style="display: none;">
+                                    <i class="fas fa-heart-broken me-1"></i>Remove Selected
+                                </button>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="selectAllCheckbox">
+                                    <label class="form-check-label" for="selectAllCheckbox">
+                                        Select all
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div id="favoritesContainer">
+                                <!-- Loading state -->
+                                <div class="text-center py-5" id="loadingState">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading favorites...</span>
+                                    </div>
+                                    <p class="mt-3">Loading your favorite jobs...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty state -->
+            <div class="row" id="emptyState" style="display: none;">
+                <div class="col-12 text-center py-5">
+                    <div class="text-muted mb-3">
+                        <i class="far fa-heart fa-4x"></i>
+                    </div>
+                    <h4 class="text-muted mb-3">You don't have any favorite jobs yet</h4>
+                    <p class="text-muted mb-4">Explore jobs and save the ones that interest you most</p>
+                    <a href="empleos.html" class="btn btn-accent">
+                        <i class="fas fa-search me-2"></i>
+                        Search Jobs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Job Details Modal -->
+    <div class="modal fade" id="jobModal" tabindex="-1" aria-labelledby="jobModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="jobModalLabel">Job Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="jobModalBody">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-danger" id="removeFromFavoritesBtn">
+                        <i class="fas fa-heart-broken me-2"></i>Remove from Favorites
+                    </button>
+                    <button type="button" class="btn btn-accent" id="applyFromModalBtn">
+                        <i class="fas fa-paper-plane me-2"></i>Apply Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer will be loaded dynamically -->
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { showToast } from '../js/ui.js';
+        import { getCurrentUser } from '../js/guards.js';
+        
+        // Sample favorites data
+        const favoritesData = [
+            {
+                id: 1,
+                title: "Senior Frontend Developer",
+                company: "Tech Solutions Inc.",
+                location: "Remote",
+                salary: "$4.5M - $5.5M",
+                type: "Full time",
+                category: "frontend",
+                description: "We are looking for a senior frontend developer with experience in React and TypeScript...",
+                requirements: ["React", "TypeScript", "Redux", "5+ years experience"],
+                benefits: ["Remote work", "Health insurance", "Training"],
+                postedDate: "2024-03-15",
+                expiryDate: "2024-04-15",
+                savedDate: "2024-03-16",
+                status: "active",
+                applied: false,
+                matchScore: 95,
+                logo: "../img/reactjs-inner.svg"
+            },
+            {
+                id: 2,
+                title: "Node.js Backend Developer",
+                company: "StartupCorp",
+                location: "Bogotá",
+                salary: "$3.8M - $4.2M",
+                type: "Full time",
+                category: "backend",
+                description: "Join our backend team to develop scalable APIs...",
+                requirements: ["Node.js", "Express", "MongoDB", "3+ years experience"],
+                benefits: ["Flexible hours", "Bonuses", "Professional growth"],
+                postedDate: "2024-03-14",
+                expiryDate: "2024-04-14",
+                savedDate: "2024-03-15",
+                status: "active",
+                applied: true,
+                matchScore: 88,
+                logo: "../img/node.js.webp"
+            },
+            {
+                id: 3,
+                title: "Data Scientist",
+                company: "Analytics Pro",
+                location: "Medellín",
+                salary: "$5.2M - $6.0M",
+                type: "Full time",
+                category: "data-science",
+                description: "Develop machine learning models for advanced data analysis...",
+                requirements: ["Python", "Machine Learning", "SQL", "Statistics"],
+                benefits: ["Hybrid work", "Conferences", "Latest equipment"],
+                postedDate: "2024-03-12",
+                expiryDate: "2024-03-20",
+                savedDate: "2024-03-13",
+                status: "expiring",
+                applied: false,
+                matchScore: 92,
+                logo: "../img/dataScience.jpg"
+            },
+            {
+                id: 4,
+                title: "Full Stack Developer",
+                company: "Digital Agency",
+                location: "Remote",
+                salary: "$4.0M - $4.8M",
+                type: "Full time",
+                category: "fullstack",
+                description: "Develop complete web applications using modern technologies...",
+                requirements: ["React", "Node.js", "PostgreSQL", "Docker"],
+                benefits: ["100% remote", "Extra days off", "Apple equipment"],
+                postedDate: "2024-03-10",
+                expiryDate: "2024-04-10",
+                savedDate: "2024-03-11",
+                status: "active",
+                applied: true,
+                matchScore: 89,
+                logo: "../img/DevOpsLoop.webp"
+            }
+        ];
+
+        let selectedFavorites = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation with current page
+            initNavigation('favoritos', true);
+            
+            // Check authentication
+            const user = getCurrentUser();
+            if (!user) {
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            // Load favorites after a short delay
+            setTimeout(() => {
+                loadFavorites();
+            }, 1000);
+            
+            // Initialize event listeners
+            initializeEventListeners();
+        });
+
+        function loadFavorites() {
+            const container = document.getElementById('favoritesContainer');
+            const loadingState = document.getElementById('loadingState');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (favoritesData.length === 0) {
+                loadingState.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            loadingState.style.display = 'none';
+            
+            const favoritesHTML = favoritesData.map(job => createFavoriteCard(job)).join('');
+            container.innerHTML = favoritesHTML;
+            
+            updateStatistics();
+        }
+
+        function createFavoriteCard(job) {
+            const statusBadge = getStatusBadge(job.status);
+            const appliedBadge = job.applied ? '<span class="badge bg-success ms-2">Applied</span>' : '';
+            const isExpiring = job.status === 'expiring';
+            
+            return `
+                <div class="favorite-job-item border-bottom p-3 ${isExpiring ? 'bg-warning bg-opacity-10' : ''}" data-job-id="${job.id}">
+                    <div class="d-flex">
+                        <div class="form-check me-3 align-self-start mt-1">
+                            <input class="form-check-input favorite-checkbox" type="checkbox" value="${job.id}">
+                        </div>
+                        
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <img src="${job.logo}" alt="${job.company}" class="me-2" width="32" height="32" style="object-fit: contain;">
+                                        <div>
+                                            <h5 class="mb-0">${job.title}</h5>
+                                            <p class="text-muted mb-0">${job.company}</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        ${statusBadge}
+                                        ${appliedBadge}
+                                        <span class="badge bg-light text-dark">
+                                            <i class="fas fa-percentage me-1"></i>${job.matchScore}% match
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="text-success fw-bold mb-1">${job.salary}</div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-bookmark me-1"></i>
+                                        Saved: ${formatDate(job.savedDate)}
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            <div class="job-meta mb-2">
+                                <span class="me-3">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    ${job.location}
+                                </span>
+                                <span class="me-3">
+                                    <i class="fas fa-clock me-1"></i>
+                                    ${job.type}
+                                </span>
+                                <span class="badge bg-primary">${job.category}</span>
+                            </div>
+                            
+                            <p class="text-muted mb-3">${job.description}</p>
+                            
+                            <div class="skills-preview mb-3">
+                                ${job.requirements.slice(0, 4).map(req => 
+                                    `<span class="badge bg-light text-primary me-1 mb-1">${req}</span>`
+                                ).join('')}
+                                ${job.requirements.length > 4 ? 
+                                    `<span class="badge bg-secondary">+${job.requirements.length - 4}</span>` : ''}
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        Posted: ${formatDate(job.postedDate)}
+                                    </small>
+                                    ${isExpiring ? `
+                                        <span class="ms-3">
+                                            <i class="fas fa-exclamation-triangle text-warning me-1"></i>
+                                            <small class="text-warning">Expires: ${formatDate(job.expiryDate)}</small>
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary view-job" data-id="${job.id}">
+                                        <i class="fas fa-eye me-1"></i>View Details
+                                    </button>
+                                    ${!job.applied ? `
+                                        <button class="btn btn-sm btn-accent apply-job" data-id="${job.id}">
+                                            <i class="fas fa-paper-plane me-1"></i>Apply
+                                        </button>
+                                    ` : `
+                                        <button class="btn btn-sm btn-success" disabled>
+                                            <i class="fas fa-check me-1"></i>Applied
+                                        </button>
+                                    `}
+                                    <button class="btn btn-sm btn-outline-danger remove-favorite" data-id="${job.id}">
+                                        <i class="fas fa-heart-broken"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getStatusBadge(status) {
+            const badges = {
+                active: '<span class="badge bg-success">Active</span>',
+                expiring: '<span class="badge bg-warning">Expiring</span>',
+                expired: '<span class="badge bg-danger">Expired</span>',
+                applied: '<span class="badge bg-info">Applied</span>'
+            };
+            return badges[status] || badges.active;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        function updateStatistics() {
+            const total = favoritesData.length;
+            const applied = favoritesData.filter(job => job.applied).length;
+            const expiring = favoritesData.filter(job => job.status === 'expiring').length;
+            const avgMatch = Math.round(favoritesData.reduce((sum, job) => sum + job.matchScore, 0) / total);
+            
+            document.getElementById('totalFavorites').textContent = total;
+            document.getElementById('appliedFavorites').textContent = applied;
+            document.getElementById('pendingFavorites').textContent = expiring;
+            document.getElementById('matchScore').textContent = avgMatch;
+        }
+
+        function initializeEventListeners() {
+            // Filter toggle
+            document.getElementById('filterFavoritesBtn').addEventListener('click', () => {
+                const filtersRow = document.getElementById('filtersRow');
+                filtersRow.style.display = filtersRow.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Select all checkbox
+            document.getElementById('selectAllCheckbox').addEventListener('change', (e) => {
+                const checkboxes = document.querySelectorAll('.favorite-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = e.target.checked;
+                });
+                updateSelectedFavorites();
+            });
+
+            // Individual checkbox selection
+            document.addEventListener('change', (e) => {
+                if (e.target.classList.contains('favorite-checkbox')) {
+                    updateSelectedFavorites();
+                }
+            });
+
+            // View job details
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.view-job')) {
+                    e.preventDefault();
+                    const jobId = e.target.closest('.view-job').dataset.id;
+                    showJobDetails(jobId);
+                }
+            });
+
+            // Apply to job
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.apply-job')) {
+                    e.preventDefault();
+                    const jobId = e.target.closest('.apply-job').dataset.id;
+                    applyToJob(jobId);
+                }
+            });
+
+            // Remove from favorites
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-favorite')) {
+                    e.preventDefault();
+                    const jobId = e.target.closest('.remove-favorite').dataset.id;
+                    removeFromFavorites([jobId]);
+                }
+            });
+
+            // Remove selected favorites
+            document.getElementById('removeSelectedBtn').addEventListener('click', () => {
+                const selected = Array.from(document.querySelectorAll('.favorite-checkbox:checked'))
+                    .map(checkbox => checkbox.value);
+                
+                if (selected.length > 0) {
+                    removeFromFavorites(selected);
+                }
+            });
+        }
+
+        function updateSelectedFavorites() {
+            selectedFavorites = Array.from(document.querySelectorAll('.favorite-checkbox:checked'))
+                .map(checkbox => checkbox.value);
+            
+            const removeBtn = document.getElementById('removeSelectedBtn');
+            removeBtn.style.display = selectedFavorites.length > 0 ? 'block' : 'none';
+            
+            // Update select all checkbox state
+            const allCheckboxes = document.querySelectorAll('.favorite-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            
+            if (selectedFavorites.length === 0) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = false;
+            } else if (selectedFavorites.length === allCheckboxes.length) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = true;
+            } else {
+                selectAllCheckbox.indeterminate = true;
+            }
+        }
+
+        function showJobDetails(jobId) {
+            const job = favoritesData.find(j => j.id == jobId);
+            if (!job) return;
+
+            const modalBody = document.getElementById('jobModalBody');
+            modalBody.innerHTML = `
+                <div class="job-header mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="${job.logo}" alt="${job.company}" class="me-3" width="48" height="48" style="object-fit: contain;">
+                        <div>
+                            <h3 class="mb-1">${job.title}</h3>
+                            <h5 class="text-muted mb-0">${job.company}</h5>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><i class="fas fa-map-marker-alt me-2"></i>${job.location}</p>
+                            <p><i class="fas fa-clock me-2"></i>${job.type}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><i class="fas fa-dollar-sign me-2"></i>${job.salary}</p>
+                            <p><i class="fas fa-percentage me-2"></i>${job.matchScore}% match</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="job-description mb-4">
+                    <h5>Description</h5>
+                    <p>${job.description}</p>
+                </div>
+                
+                <div class="job-requirements mb-4">
+                    <h5>Requirements</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        ${job.requirements.map(req => 
+                            `<span class="badge bg-primary">${req}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+                
+                <div class="job-benefits">
+                    <h5>Benefits</h5>
+                    <ul>
+                        ${job.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            // Update modal buttons
+            document.getElementById('removeFromFavoritesBtn').dataset.jobId = jobId;
+            document.getElementById('applyFromModalBtn').dataset.jobId = jobId;
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('jobModal'));
+            modal.show();
+        }
+
+        function applyToJob(jobId) {
+            const job = favoritesData.find(j => j.id == jobId);
+            if (!job) return;
+            
+            if (job.applied) {
+                showToast('You have already applied to this job', 'info');
+                return;
+            }
+            
+            job.applied = true;
+            showToast(`Application sent for: ${job.title}`, 'success');
+            
+            // Reload the view to reflect changes
+            setTimeout(() => {
+                loadFavorites();
+            }, 1000);
+        }
+
+        function removeFromFavorites(jobIds) {
+            const jobTitles = jobIds.map(id => {
+                const job = favoritesData.find(j => j.id == id);
+                return job ? job.title : 'Job';
+            });
+            
+            const confirmMessage = jobIds.length === 1 
+                ? `Remove "${jobTitles[0]}" from favorites?`
+                : `Remove ${jobIds.length} jobs from favorites?`;
+                
+            if (!confirm(confirmMessage)) return;
+            
+            // Remove jobs from favorites array
+            jobIds.forEach(id => {
+                const index = favoritesData.findIndex(job => job.id == id);
+                if (index > -1) {
+                    favoritesData.splice(index, 1);
+                }
+            });
+            
+            showToast(
+                jobIds.length === 1 
+                    ? 'Job removed from favorites' 
+                    : `${jobIds.length} jobs removed from favorites`,
+                'success'
+            );
+            
+            // Reload the view
+            loadFavorites();
+            
+            // Reset selection
+            selectedFavorites = [];
+            document.getElementById('selectAllCheckbox').checked = false;
+            document.getElementById('removeSelectedBtn').style.display = 'none';
+        }
+
+        // Modal button handlers
+        document.getElementById('removeFromFavoritesBtn').addEventListener('click', () => {
+            const jobId = document.getElementById('removeFromFavoritesBtn').dataset.jobId;
+            removeFromFavorites([jobId]);
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('jobModal'));
+            modal.hide();
+        });
+
+        document.getElementById('applyFromModalBtn').addEventListener('click', () => {
+            const jobId = document.getElementById('applyFromModalBtn').dataset.jobId;
+            applyToJob(jobId);
+        });
+    </script>
+</body>
+</html>

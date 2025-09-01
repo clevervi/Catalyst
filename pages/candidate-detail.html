@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Profile - Catalyst HR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+    <style>
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary-light);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid white;
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background: var(--primary-lightest);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            margin: 0.25rem 0.25rem 0.25rem 0;
+        }
+        
+        .rating-stars {
+            color: var(--warning);
+        }
+        
+        .candidate-actions {
+            position: sticky;
+            top: 100px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+    </style>
+</head>
+<body class="hr-page">
+    <!-- Navigation will be inserted by role management -->
+
+    <main class="py-5 mt-4">
+        <div class="container">
+            <!-- Header with breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="resume-database.html">CV Database</a></li>
+                    <li class="breadcrumb-item active">Candidate Profile</li>
+                </ol>
+            </nav>
+
+            <div class="row">
+                <!-- Main Content -->
+                <div class="col-lg-8">
+                    <!-- Candidate Header -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-3 text-center">
+                                    <img src="../img/image.png" alt="Foto del candidato" 
+                                         class="rounded-circle mb-3" width="120" height="120" id="candidate-photo">
+                                    <div class="rating-stars mb-2" id="candidate-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <div class="small text-muted">Rating: 4.5/5</div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h2 class="mb-1" id="candidate-name">Carlos Andrés Rodríguez</h2>
+                                            <p class="text-muted mb-2" id="candidate-title">Senior Full Stack Developer</p>
+                                            <div class="mb-3">
+                                                <span class="badge bg-success me-2" id="candidate-status">Available</span>
+                                                <span class="badge bg-primary me-2">5+ years exp.</span>
+                                                <span class="badge bg-info">Remote</span>
+                                            </div>
+                                            <div class="contact-info">
+                                                <div class="mb-1">
+                                                    <i class="fas fa-envelope me-2"></i>
+                                                    <span id="candidate-email">carlos.rodriguez@email.com</span>
+                                                </div>
+                                                <div class="mb-1">
+                                                    <i class="fas fa-phone me-2"></i>
+                                                    <span id="candidate-phone">+57 300 123 4567</span>
+                                                </div>
+                                                <div class="mb-1">
+                                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                                    <span id="candidate-location">Bogotá, Colombia</span>
+                                                </div>
+                                                <div>
+                                                    <i class="fab fa-linkedin me-2"></i>
+                                                    <a href="#" id="candidate-linkedin">linkedin.com/in/carlosrodriguez</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="text-muted small">Last contact:</div>
+                                            <div class="fw-bold">15 Jan 2024</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-user me-2"></i>
+                                Professional Summary
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p id="candidate-summary">
+                                Full Stack Developer with over 5 years of experience in developing scalable web applications
+                                using modern technologies like React, Node.js, Python, and NoSQL databases.
+                                Proven experience in agile methodologies, technical leadership, and mentoring junior teams.
+                                Passionate about technological innovation and the development of efficient solutions.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-cogs me-2"></i>
+                                Technical Skills
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Lenguajes de Programación</h6>
+                                    <div class="mb-3" id="programming-skills">
+                                        <span class="skill-tag">JavaScript</span>
+                                        <span class="skill-tag">Python</span>
+                                        <span class="skill-tag">TypeScript</span>
+                                        <span class="skill-tag">Java</span>
+                                        <span class="skill-tag">PHP</span>
+                                    </div>
+                                    
+                                    <h6>Frameworks & Librerías</h6>
+                                    <div class="mb-3" id="framework-skills">
+                                        <span class="skill-tag">React</span>
+                                        <span class="skill-tag">Node.js</span>
+                                        <span class="skill-tag">Express</span>
+                                        <span class="skill-tag">Django</span>
+                                        <span class="skill-tag">Vue.js</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Bases de Datos</h6>
+                                    <div class="mb-3" id="database-skills">
+                                        <span class="skill-tag">MongoDB</span>
+                                        <span class="skill-tag">PostgreSQL</span>
+                                        <span class="skill-tag">MySQL</span>
+                                        <span class="skill-tag">Redis</span>
+                                    </div>
+                                    
+                                    <h6>Herramientas & DevOps</h6>
+                                    <div class="mb-3" id="tools-skills">
+                                        <span class="skill-tag">Docker</span>
+                                        <span class="skill-tag">AWS</span>
+                                        <span class="skill-tag">Git</span>
+                                        <span class="skill-tag">Jenkins</span>
+                                        <span class="skill-tag">Kubernetes</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Experience -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-briefcase me-2"></i>
+                                Experiencia Laboral
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline" id="experience-timeline">
+                                <div class="timeline-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">Senior Full Stack Developer</h6>
+                                            <div class="text-primary mb-1">TechCorp Solutions</div>
+                                            <div class="text-muted mb-2">Marzo 2022 - Presente</div>
+                                            <p class="mb-0 small">
+                                                Liderazgo técnico en el desarrollo de plataforma e-commerce de alto tráfico. 
+                                                Implementación de arquitectura de microservicios, optimización de performance 
+                                                y mentoría de 3 desarrolladores junior.
+                                            </p>
+                                        </div>
+                                        <span class="badge bg-success">Actual</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div>
+                                        <h6 class="mb-1">Full Stack Developer</h6>
+                                        <div class="text-primary mb-1">Innovatech</div>
+                                        <div class="text-muted mb-2">Enero 2020 - Febrero 2022</div>
+                                        <p class="mb-0 small">
+                                            Desarrollo de aplicaciones web con React y Node.js. Implementación de APIs RESTful, 
+                                            integración con servicios AWS y optimización de bases de datos.
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div>
+                                        <h6 class="mb-1">Frontend Developer</h6>
+                                        <div class="text-primary mb-1">StartupXYZ</div>
+                                        <div class="text-muted mb-2">Junio 2019 - Diciembre 2019</div>
+                                        <p class="mb-0 small">
+                                            Desarrollo de interfaces de usuario responsivas con React y implementación 
+                                            de mejores prácticas en UX/UI.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-graduation-cap me-2"></i>
+                                Educación
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline" id="education-timeline">
+                                <div class="timeline-item">
+                                    <div>
+                                        <h6 class="mb-1">Ingeniería de Sistemas</h6>
+                                        <div class="text-primary mb-1">Universidad Nacional de Colombia</div>
+                                        <div class="text-muted mb-2">2015 - 2019</div>
+                                        <p class="mb-0 small">Promedio: 4.2/5.0</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div>
+                                        <h6 class="mb-1">AWS Solutions Architect Associate</h6>
+                                        <div class="text-primary mb-1">Amazon Web Services</div>
+                                        <div class="text-muted mb-2">2021</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Projects -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-code me-2"></i>
+                                Proyectos Destacados
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="border p-3 rounded">
+                                        <h6 class="mb-1">E-commerce Platform</h6>
+                                        <div class="small text-muted mb-2">TechCorp Solutions</div>
+                                        <p class="small mb-2">
+                                            Plataforma de comercio electrónico con más de 10,000 usuarios activos. 
+                                            Stack: React, Node.js, MongoDB, AWS.
+                                        </p>
+                                        <a href="#" class="btn btn-sm btn-outline-primary">Ver Proyecto</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="border p-3 rounded">
+                                        <h6 class="mb-1">Task Management App</h6>
+                                        <div class="small text-muted mb-2">Proyecto Personal</div>
+                                        <p class="small mb-2">
+                                            Aplicación de gestión de tareas con colaboración en tiempo real. 
+                                            Stack: Vue.js, Express, Socket.io.
+                                        </p>
+                                        <a href="#" class="btn btn-sm btn-outline-primary">Ver en GitHub</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity & Notes -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <ul class="nav nav-tabs card-header-tabs" id="activity-tabs">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="notes-tab" data-bs-toggle="tab" href="#notes">
+                                                <i class="fas fa-sticky-note me-1"></i>Notas
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="interviews-tab" data-bs-toggle="tab" href="#interviews">
+                                                <i class="fas fa-calendar-check me-1"></i>Entrevistas
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="activity-tab" data-bs-toggle="tab" href="#activity">
+                                                <i class="fas fa-history me-1"></i>Actividad
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+                                    <div class="tab-content">
+                                        <!-- Notes -->
+                                        <div class="tab-pane fade show active" id="notes">
+                                            <div class="mb-3">
+                                                <textarea class="form-control" rows="3" id="new-note" placeholder="Agregar nueva nota..."></textarea>
+                                                <div class="d-flex justify-content-end mt-2">
+                                                    <button class="btn btn-sm btn-primary" id="add-note-btn">
+                                                        <i class="fas fa-plus me-1"></i>Agregar Nota
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            
+                                            <div id="notes-list">
+                                                <div class="note-item border-bottom pb-3 mb-3">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <div class="fw-bold">Ana García</div>
+                                                            <div class="text-muted small">15 Ene 2024, 10:30 AM</div>
+                                                        </div>
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                                                                <i class="fas fa-ellipsis-v"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a class="dropdown-item" href="#">Editar</a></li>
+                                                                <li><a class="dropdown-item text-danger" href="#">Eliminar</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <p class="mt-2 mb-0">
+                                                        Excelente perfil técnico. Muestra gran experiencia en React y Node.js. 
+                                                        Recomiendo avanzar a entrevista técnica.
+                                                    </p>
+                                                </div>
+                                                
+                                                <div class="note-item border-bottom pb-3 mb-3">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <div class="fw-bold">Sistema</div>
+                                                            <div class="text-muted small">14 Ene 2024, 2:15 PM</div>
+                                                        </div>
+                                                    </div>
+                                                    <p class="mt-2 mb-0">
+                                                        CV revisado automáticamente. Puntuación de compatibilidad: 85%
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Interviews -->
+                                        <div class="tab-pane fade" id="interviews">
+                                            <div class="text-center py-4">
+                                                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                                <p class="text-muted">No hay entrevistas programadas</p>
+                                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleInterviewModal">
+                                                    <i class="fas fa-calendar-plus me-1"></i>Programar Entrevista
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Activity -->
+                                        <div class="tab-pane fade" id="activity">
+                                            <div class="timeline">
+                                                <div class="timeline-item">
+                                                    <div class="small text-muted">Hace 1 día</div>
+                                                    <div>CV revisado por Ana García</div>
+                                                </div>
+                                                <div class="timeline-item">
+                                                    <div class="small text-muted">Hace 2 días</div>
+                                                    <div>Candidato agregado al proceso de "Senior Developer"</div>
+                                                </div>
+                                                <div class="timeline-item">
+                                                    <div class="small text-muted">Hace 3 días</div>
+                                                    <div>CV subido al sistema</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Actions -->
+                <div class="col-lg-4">
+                    <div class="candidate-actions p-3">
+                        <h6 class="mb-3">Acciones del Candidato</h6>
+                        
+                        <div class="d-grid gap-2 mb-4">
+                            <button class="btn btn-success" id="contact-candidate">
+                                <i class="fas fa-envelope me-1"></i>Contactar
+                            </button>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleInterviewModal">
+                                <i class="fas fa-calendar-plus me-1"></i>Programar Entrevista
+                            </button>
+                            <button class="btn btn-info" id="download-cv">
+                                <i class="fas fa-download me-1"></i>Descargar CV
+                            </button>
+                            <div class="btn-group w-100" role="group">
+                                <button class="btn btn-outline-success" id="approve-candidate">
+                                    <i class="fas fa-check me-1"></i>Aprobar
+                                </button>
+                                <button class="btn btn-outline-danger" id="reject-candidate">
+                                    <i class="fas fa-times me-1"></i>Rechazar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Estado del Proceso</h6>
+                            <select class="form-select" id="candidate-process-status">
+                                <option value="applied">Aplicado</option>
+                                <option value="screening" selected>En Revisión</option>
+                                <option value="interview">Entrevista</option>
+                                <option value="offer">Oferta</option>
+                                <option value="rejected">Rechazado</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Vacantes Relacionadas</h6>
+                            <div class="list-group list-group-flush">
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="fw-bold">Senior Developer</div>
+                                    <div class="small text-muted">TechCorp - Activo</div>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="fw-bold">Full Stack Engineer</div>
+                                    <div class="small text-muted">StartupXYZ - En pausa</div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Información Adicional</h6>
+                            <div class="small">
+                                <div class="mb-2">
+                                    <strong>Expectativa Salarial:</strong><br>
+                                    $4,500,000 - $6,000,000 COP
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Disponibilidad:</strong><br>
+                                    Inmediata
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Modalidad Preferida:</strong><br>
+                                    Remoto / Híbrido
+                                </div>
+                                <div>
+                                    <strong>Idiomas:</strong><br>
+                                    Español (Nativo), Inglés (B2)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-top pt-3">
+                            <div class="text-center">
+                                <div class="small text-muted">Agregado el</div>
+                                <div class="fw-bold">12 Enero 2024</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Schedule Interview Modal -->
+    <div class="modal fade" id="scheduleInterviewModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Programar Entrevista</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="interview-form">
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Entrevista</label>
+                            <select class="form-select" id="interview-type">
+                                <option value="screening">Entrevista de Screening</option>
+                                <option value="technical">Entrevista Técnica</option>
+                                <option value="cultural">Entrevista Cultural</option>
+                                <option value="final">Entrevista Final</option>
+                            </select>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha</label>
+                                <input type="date" class="form-control" id="interview-date">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Hora</label>
+                                <input type="time" class="form-control" id="interview-time">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Entrevistador</label>
+                            <select class="form-select" id="interviewer">
+                                <option value="">Seleccionar entrevistador</option>
+                                <option value="ana.garcia">Ana García - HR Manager</option>
+                                <option value="carlos.lopez">Carlos López - Tech Lead</option>
+                                <option value="maria.rodriguez">María Rodríguez - Director</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Modalidad</label>
+                            <select class="form-select" id="interview-mode">
+                                <option value="virtual">Virtual</option>
+                                <option value="presencial">Presencial</option>
+                                <option value="telefonica">Telefónica</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Notas adicionales</label>
+                            <textarea class="form-control" rows="3" id="interview-notes" placeholder="Información adicional para el candidato..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="save-interview">Programar Entrevista</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { initializeGuards } from '../js/guards.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation and guards
+            initNavigation('candidate-detail', true);
+            initializeGuards('candidate-detail.html');
+
+            // Load candidate data (in a real app, this would come from URL parameters)
+            loadCandidateData();
+
+            // Event listeners
+            document.getElementById('add-note-btn').addEventListener('click', addNote);
+            document.getElementById('save-interview').addEventListener('click', scheduleInterview);
+            document.getElementById('contact-candidate').addEventListener('click', contactCandidate);
+            document.getElementById('download-cv').addEventListener('click', downloadCV);
+            document.getElementById('approve-candidate').addEventListener('click', () => updateCandidateStatus('approved'));
+            document.getElementById('reject-candidate').addEventListener('click', () => updateCandidateStatus('rejected'));
+            
+            // Status change listener
+            document.getElementById('candidate-process-status').addEventListener('change', (e) => {
+                updateCandidateProcessStatus(e.target.value);
+            });
+
+            // Set minimum date for interview scheduling
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('interview-date').min = today;
+        });
+
+        function loadCandidateData() {
+            // In a real application, this would fetch data from a server
+            // For now, we'll use the data already in the HTML
+            
+            // You could fetch additional data here based on URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const candidateId = urlParams.get('id') || '1';
+            
+            // Update page title
+            document.title = `${document.getElementById('candidate-name').textContent} - Catalyst HR`;
+        }
+
+        function addNote() {
+            const noteText = document.getElementById('new-note').value.trim();
+            if (!noteText) return;
+
+            const notesList = document.getElementById('notes-list');
+            const noteItem = document.createElement('div');
+            noteItem.className = 'note-item border-bottom pb-3 mb-3';
+            
+            const currentUser = 'Usuario Actual'; // In real app, get from auth
+            const currentDate = new Date().toLocaleString('es-CO');
+            
+            noteItem.innerHTML = `
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-bold">${currentUser}</div>
+                        <div class="text-muted small">${currentDate}</div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Editar</a></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="this.closest('.note-item').remove()">Eliminar</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="mt-2 mb-0">${noteText}</p>
+            `;
+            
+            notesList.insertBefore(noteItem, notesList.firstChild);
+            document.getElementById('new-note').value = '';
+            
+            // Show success feedback
+            showToast('Nota agregada exitosamente');
+        }
+
+        function scheduleInterview() {
+            const form = document.getElementById('interview-form');
+            const formData = new FormData(form);
+            
+            // Validate required fields
+            const type = document.getElementById('interview-type').value;
+            const date = document.getElementById('interview-date').value;
+            const time = document.getElementById('interview-time').value;
+            const interviewer = document.getElementById('interviewer').value;
+            
+            if (!type || !date || !time || !interviewer) {
+                alert('Por favor complete todos los campos requeridos');
+                return;
+            }
+            
+            // In a real app, send data to server
+            console.log('Scheduling interview:', {
+                type, date, time, interviewer,
+                mode: document.getElementById('interview-mode').value,
+                notes: document.getElementById('interview-notes').value
+            });
+            
+            // Close modal and show success
+            const modal = bootstrap.Modal.getInstance(document.getElementById('scheduleInterviewModal'));
+            modal.hide();
+            
+            showToast('Entrevista programada exitosamente');
+            
+            // Update interviews tab to show the scheduled interview
+            updateInterviewsTab(type, date, time, interviewer);
+        }
+
+        function updateInterviewsTab(type, date, time, interviewer) {
+            const interviewsTab = document.getElementById('interviews');
+            interviewsTab.innerHTML = `
+                <div class="interview-item border p-3 rounded mb-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">${type.charAt(0).toUpperCase() + type.slice(1)}</h6>
+                            <div class="text-muted mb-1">
+                                <i class="fas fa-calendar me-1"></i>${date} ${time}
+                            </div>
+                            <div class="text-muted mb-2">
+                                <i class="fas fa-user me-1"></i>${interviewer}
+                            </div>
+                            <span class="badge bg-warning">Programada</span>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Editar</a></li>
+                                <li><a class="dropdown-item" href="#">Cancelar</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function contactCandidate() {
+            const email = document.getElementById('candidate-email').textContent;
+            const name = document.getElementById('candidate-name').textContent;
+            
+            // In a real app, this would open an email client or internal messaging system
+            window.location.href = `mailto:${email}?subject=Oportunidad laboral - Catalyst HR&body=Hola ${name},%0D%0A%0D%0ANos ponemos en contacto contigo...`;
+        }
+
+        function downloadCV() {
+            // In a real app, this would download the actual CV file
+            showToast('Descargando CV...');
+            
+            // Simulate download
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.href = 'data:text/plain;charset=utf-8,CV de Carlos Andrés Rodríguez';
+                link.download = 'Carlos_Rodriguez_CV.pdf';
+                link.click();
+                showToast('CV descargado exitosamente');
+            }, 1000);
+        }
+
+        function updateCandidateStatus(status) {
+            const candidateName = document.getElementById('candidate-name').textContent;
+            const action = status === 'approved' ? 'aprobar' : 'rechazar';
+            
+            if (confirm(`¿Está seguro de que desea ${action} a ${candidateName}?`)) {
+                // In a real app, send to server
+                showToast(`Candidato ${status === 'approved' ? 'aprobado' : 'rechazado'} exitosamente`);
+                
+                // Update status badge
+                const statusBadge = document.getElementById('candidate-status');
+                statusBadge.className = `badge ${status === 'approved' ? 'bg-success' : 'bg-danger'} me-2`;
+                statusBadge.textContent = status === 'approved' ? 'Aprobado' : 'Rechazado';
+            }
+        }
+
+        function updateCandidateProcessStatus(status) {
+            // In a real app, send to server
+            showToast('Estado del proceso actualizado');
+        }
+
+        function showToast(message, type = 'success') {
+            // Simple toast notification
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
+            toast.style.zIndex = '9999';
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

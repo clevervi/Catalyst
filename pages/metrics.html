@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiring Metrics - Catalyst</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+    <!-- Include Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation will be loaded dynamically -->
+
+    <main class="py-5 mt-4">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Hiring Metrics</h2>
+                <div>
+                    <select class="form-select me-2 d-inline-block" style="width: auto;" id="time-filter">
+                        <option value="30">Last 30 days</option>
+                        <option value="60">Last 60 days</option>
+                        <option value="90">Last 90 days</option>
+                        <option value="365">Last year</option>
+                    </select>
+                    <button class="btn btn-accent" id="refresh-metrics">
+                        <i class="fas fa-sync-alt me-1"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <div id="metrics-dashboard">
+                <!-- The metrics dashboard will be loaded here -->
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading metrics...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../js/metrics.js"></script>
+    <script type="module">
+        import { initMetricsDashboard } from '../js/metrics.js';
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize the metrics dashboard
+            await initMetricsDashboard();
+            
+            // Set up time filter
+            document.getElementById('time-filter').addEventListener('change', () => {
+                initMetricsDashboard();
+            });
+            
+            // Set up refresh button
+            document.getElementById('refresh-metrics').addEventListener('click', () => {
+                initMetricsDashboard();
+            });
+        });
+    </script>
+
+    <!-- Navigation and Authentication System -->
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { updateAuthUI, ROLES } from '../js/roles.js';
+        import { initPageWithGuards } from '../js/guards.js';
+        
+        // Initialize page with role-based guards (Admin, Manager, Bank Representative)
+        initPageWithGuards({
+            pageName: 'metrics.html',
+            requiredRoles: [ROLES.ADMIN, ROLES.MANAGER, ROLES.BANK_REPRESENTATIVE],
+            authRequired: true,
+            basePath: '../',
+            onAccessGranted: (user) => {
+                // Initialize navigation only after access is confirmed
+                initNavigation('metrics', true);
+                updateAuthUI();
+                console.log('✅ Metrics page initialized for user:', user.firstName);
+            },
+            onAccessDenied: () => {
+                console.log('❌ Access denied to metrics page');
+            }
+        });
+    </script>
+</body>
+</html>

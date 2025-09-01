@@ -1,0 +1,18 @@
+/* Placeholder company logos - we'll use CSS to create professional looking placeholder logos */
+.company-logo-placeholder {
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.company-logo-1 { background: linear-gradient(135deg, #059669, #10b981); }
+.company-logo-2 { background: linear-gradient(135deg, #dc2626, #ef4444); }
+.company-logo-3 { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }

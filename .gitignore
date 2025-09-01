@@ -1,0 +1,248 @@
+# ==============================================
+# SENSITIVE FILES - NEVER COMMIT THESE
+# ==============================================
+
+# Environment variables and configuration files
+.env
+.env.*
+.env.local
+.env.production
+.env.staging
+.env.development
+config.local.js
+config.local.json
+
+# Database configuration files
+database.config.js
+db.config.js
+database.json
+db.json
+
+# API keys and secrets
+secrets.json
+api-keys.txt
+*.key
+*.pem
+*.p12
+*.crt
+*.cer
+
+# ==============================================
+# NODE.JS DEPENDENCIES
+# ==============================================
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Package manager lock files (optional - some teams commit these)
+# Uncomment the following lines if you don't want to track lock files
+# package-lock.json
+# yarn.lock
+
+# ==============================================
+# LOGS AND DEBUGGING
+# ==============================================
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# ==============================================
+# TEMPORARY AND CACHE FILES
+# ==============================================
+
+# Temporary folders
+tmp/
+temp/
+.tmp/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+dist/
+build/
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# ==============================================
+# IDE AND EDITOR FILES
+# ==============================================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ==============================================
+# OPERATING SYSTEM FILES
+# ==============================================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ==============================================
+# UPLOADS AND USER CONTENT
+# ==============================================
+
+# User uploaded files (adjust paths as needed)
+uploads/private/
+uploads/sensitive/
+user-uploads/
+temp-uploads/
+
+# Profile pictures with sensitive data
+uploads/profiles/
+uploads/documents/
+
+# ==============================================
+# BACKUP AND ARCHIVE FILES
+# ==============================================
+
+# Backup files
+*.backup
+*.bak
+*.old
+*.orig
+*.save
+*.swp
+*.tmp
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# ==============================================
+# DATABASE FILES
+# ==============================================
+
+# SQLite databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Database dumps
+*.sql.dump
+*.dump
+database_backup_*
+
+# ==============================================
+# SECURITY AND TESTING
+# ==============================================
+
+# Security scan reports
+security-report.*
+vulnerability-report.*
+
+# Test reports with sensitive data
+test-results/
+test-reports/
+coverage-reports/
+
+# ==============================================
+# CERTIFICATES AND KEYS
+# ==============================================
+
+# SSL certificates
+*.crt
+*.cer
+*.key
+*.pem
+*.p12
+*.pfx
+
+# SSH keys
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# ==============================================
+# PROJECT-SPECIFIC
+# ==============================================
+
+# Add any project-specific sensitive files here
+# Example:
+# sensitive-data/
+# private-configs/
+# local-settings.json

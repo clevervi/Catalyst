@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Alerts - Catalyst</title>
+    <meta name="description" content="Set up custom alerts to receive notifications of new job opportunities">
+    
+    <!-- CSS Framework and Styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Navigation will be loaded dynamically -->
+    
+    <main class="py-5" style="padding-top: 100px;">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h1 class="h3 mb-2">
+                                <i class="fas fa-bell text-primary me-2"></i>
+                                Job Alerts
+                            </h1>
+                            <p class="text-muted mb-0">Set up custom alerts so you don't miss any opportunities</p>
+                        </div>
+                        <button class="btn btn-accent" data-bs-toggle="modal" data-bs-target="#createAlertModal">
+                            <i class="fas fa-plus me-2"></i>New Alert
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alert Statistics -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="text-primary mb-2">
+                                <i class="fas fa-bell fa-2x"></i>
+                            </div>
+                            <h3 class="text-primary mb-1" id="totalAlerts">5</h3>
+                            <small class="text-muted"> Active Alerts</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="text-success mb-2">
+                                <i class="fas fa-envelope fa-2x"></i>
+                            </div>
+                            <h3 class="text-success mb-1" id="notificationsToday">12</h3>
+                            <small class="text-muted">Notifications Today</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="text-info mb-2">
+                                <i class="fas fa-briefcase fa-2x"></i>
+                            </div>
+                            <h3 class="text-info mb-1" id="matchingJobs">24</h3>
+                            <small class="text-muted">Matching Jobs</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="text-warning mb-2">
+                                <i class="fas fa-star fa-2x"></i>
+                            </div>
+                            <h3 class="text-warning mb-1" id="alertScore">89</h3>
+                            <small class="text-muted">% Precision</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Notifications -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-history me-2"></i>
+                                Recent Notifications
+                            </h5>
+                            <button class="btn btn-sm btn-outline-primary" id="markAllReadBtn">
+                                <i class="fas fa-check-double me-1"></i>Mark as read
+                            </button>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush" id="recentNotifications">
+                                <!-- Notifications will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Alerts -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-bell-slash me-2"></i>
+                                My Configured Alerts
+                            </h5>
+                        </div>
+                        <div class="card-body" id="alertsContainer">
+                            <!-- Loading state -->
+                            <div class="text-center py-4" id="loadingState">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading alerts...</span>
+                                </div>
+                                <p class="mt-3">Loading your alerts...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Alert Modal -->
+    <div class="modal fade" id="createAlertModal" tabindex="-1" aria-labelledby="createAlertModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createAlertModalLabel">
+                        <i class="fas fa-plus me-2"></i>New Job Alert
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createAlertForm">
+                        <div class="mb-3">
+                            <label for="alertName" class="form-label">Alert name *</label>
+                            <input type="text" class="form-control" id="alertName" placeholder="E.g.: Senior Frontend Developer" required>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="alertKeywords" class="form-label">Keywords</label>
+                                <input type="text" class="form-control" id="alertKeywords" placeholder="React, JavaScript, Frontend">
+                                <small class="text-muted">Separate with commas</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="alertCategory" class="form-label">Category</label>
+                                <select class="form-select" id="alertCategory">
+                                    <option value="">All categories</option>
+                                    <option value="frontend">Frontend</option>
+                                    <option value="backend">Backend</option>
+                                    <option value="fullstack">Full Stack</option>
+                                    <option value="data-science">Data Science</option>
+                                    <option value="devops">DevOps</option>
+                                    <option value="mobile">Mobile</option>
+                                    <option value="qa">QA/Testing</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="alertLocation" class="form-label">Location</label>
+                                <select class="form-select" id="alertLocation">
+                                    <option value="">Any location</option>
+                                    <option value="remote">Remote</option>
+                                    <option value="bogota">Bogotá</option>
+                                    <option value="medellin">Medellín</option>
+                                    <option value="cali">Cali</option>
+                                    <option value="barranquilla">Barranquilla</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="alertExperience" class="form-label">Experience level</label>
+                                <select class="form-select" id="alertExperience">
+                                    <option value="">Any level</option>
+                                    <option value="junior"> (0-2 años)</option>
+                                    <option value="semi-senior">Semi-Senior (2-4 años)</option>
+                                    <option value="senior">Senior (4+ años)</option>
+                                    <option value="lead">Lead/Architect</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="alertSalaryMin" class="form-label">Minimum wage</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="alertSalaryMin" placeholder="2000000">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="alertType" class="form-label">Type of employment</label>
+                                <select class="form-select" id="alertType">
+                                    <option value="">Any type</option>
+                                    <option value="full-time">Full time</option>
+                                    <option value="part-time">Part time</option>
+                                    <option value="contract">By contract</option>
+                                    <option value="freelance">Freelance</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="alertFrequency" class="form-label">Notification frequency</label>
+                            <select class="form-select" id="alertFrequency" required>
+                                <option value="instant">Instant</option>
+                                <option value="daily" selected>Daily</option>
+                                <option value="weekly">Weekly</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="alertEmail" checked>
+                                <label class="form-check-label" for="alertEmail">
+                                    Email notifications
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-accent" id="saveAlertBtn">
+                        <i class="fas fa-save me-2"></i>Create Alert
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer will be loaded dynamically -->
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { showToast } from '../js/ui.js';
+        import { getCurrentUser } from '../js/guards.js';
+        
+        // Sample alerts data
+        const alertsData = [
+            {
+                id: 1,
+                name: "Desarrollador React Senior",
+                keywords: ["React", "TypeScript", "Senior"],
+                category: "frontend",
+                location: "remote",
+                experience: "senior",
+                salaryMin: 4000000,
+                type: "full-time",
+                frequency: "daily",
+                email: true,
+                active: true,
+                createdDate: "2024-03-01",
+                lastMatch: "2024-03-15",
+                matchCount: 8
+            },
+            {
+                id: 2,
+                name: "Backend Node.js",
+                keywords: ["Node.js", "Express", "MongoDB"],
+                category: "backend",
+                location: "bogota",
+                experience: "semi-senior",
+                salaryMin: 3500000,
+                type: "full-time",
+                frequency: "instant",
+                email: true,
+                active: true,
+                createdDate: "2024-02-15",
+                lastMatch: "2024-03-14",
+                matchCount: 12
+            },
+            {
+                id: 3,
+                name: "Data Science Python",
+                keywords: ["Python", "Machine Learning", "Data Science"],
+                category: "data-science",
+                location: "",
+                experience: "senior",
+                salaryMin: 5000000,
+                type: "full-time",
+                frequency: "weekly",
+                email: false,
+                active: false,
+                createdDate: "2024-01-20",
+                lastMatch: "2024-02-28",
+                matchCount: 3
+            }
+        ];
+
+        // Sample recent notifications
+        const notificationsData = [
+            {
+                id: 1,
+                alertName: "Desarrollador React Senior",
+                jobTitle: "Senior Frontend Developer",
+                company: "Tech Solutions",
+                location: "Remoto",
+                salary: "$4.5M - $5.5M",
+                time: "Hace 2 horas",
+                read: false
+            },
+            {
+                id: 2,
+                alertName: "Backend Node.js",
+                jobTitle: "Node.js Developer",
+                company: "StartupCorp",
+                location: "Bogotá",
+                salary: "$3.8M - $4.2M",
+                time: "Hace 4 horas",
+                read: false
+            },
+            {
+                id: 3,
+                alertName: "Desarrollador React Senior",
+                jobTitle: "React Developer",
+                company: "Digital Agency",
+                location: "Medellín",
+                salary: "$4M - $4.8M",
+                time: "Hace 1 día",
+                read: true
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation with current page
+            initNavigation('alertas', true);
+            
+            // Check authentication
+            const user = getCurrentUser();
+            if (!user) {
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            // Load content after a short delay
+            setTimeout(() => {
+                loadAlerts();
+                loadRecentNotifications();
+            }, 800);
+            
+            // Initialize event listeners
+            initializeEventListeners();
+        });
+
+        function loadRecentNotifications() {
+            const container = document.getElementById('recentNotifications');
+            
+            if (notificationsData.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">You have no recent notifications</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const notificationsHTML = notificationsData.map(notification => `
+                <div class="list-group-item ${!notification.read ? 'bg-light border-start border-primary border-3' : ''}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="badge bg-primary me-2">${notification.alertName}</span>
+                                ${!notification.read ? '<span class="badge bg-success">New</span>' : ''}
+                            </div>
+                            <h6 class="mb-1">${notification.jobTitle}</h6>
+                            <p class="mb-1 text-muted">${notification.company} • ${notification.location}</p>
+                            <p class="mb-1"><strong>${notification.salary}</strong></p>
+                            <small class="text-muted">${notification.time}</small>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="empleos.html">
+                                        <i class="fas fa-eye me-2"></i>View Job
+                                    </a></li>
+                                    <li><a class="dropdown-item mark-read" href="#" data-id="${notification.id}">
+                                        <i class="fas fa-check me-2"></i>Mark as read
+                                    </a></li>
+                                    <li><a class="dropdown-item delete-notification" href="#" data-id="${notification.id}">
+                                        <i class="fas fa-trash me-2"></i>Delete
+                                    </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = notificationsHTML;
+        }
+
+        function loadAlerts() {
+            const container = document.getElementById('alertsContainer');
+            const loadingState = document.getElementById('loadingState');
+            
+            if (alertsData.length === 0) {
+                loadingState.style.display = 'none';
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-bell fa-4x text-muted mb-3"></i>
+                        <h4 class="text-muted mb-3">You have no configured alerts</h4>
+                        <p class="text-muted mb-4">Create your first alert to receive notifications of relevant jobs</p>
+                        <button class="btn btn-accent" data-bs-toggle="modal" data-bs-target="#createAlertModal">
+                            <i class="fas fa-plus me-2"></i>Create First Alert
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            loadingState.style.display = 'none';
+            
+            const alertsHTML = alertsData.map(alert => createAlertCard(alert)).join('');
+            container.innerHTML = alertsHTML;
+            
+            updateStatistics();
+        }
+
+        function createAlertCard(alert) {
+            const statusBadge = alert.active 
+                ? '<span class="badge bg-success">Active</span>'
+                : '<span class="badge bg-secondary">Paused</span>';
+            
+            const lastMatchText = alert.lastMatch 
+                ? `Last match: ${formatDate(alert.lastMatch)}`
+                : 'No matches yet';
+                
+            return `
+                <div class="alert-item border rounded p-3 mb-3" data-alert-id="${alert.id}">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-2">
+                                <h5 class="mb-0 me-2">${alert.name}</h5>
+                                ${statusBadge}
+                            </div>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-tags me-1"></i>
+                                ${alert.keywords.join(', ')}
+                            </p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <small class="text-muted">
+                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                        ${alert.location || 'Any location'}
+                                    </small>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">
+                                        <i class="fas fa-briefcase me-1"></i>
+                                        ${alert.matchCount} matches
+                                    </small>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>
+                                        ${lastMatchText}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input alert-toggle" type="checkbox" 
+                                       ${alert.active ? 'checked' : ''} data-id="${alert.id}">
+                                <label class="form-check-label">
+                                    ${alert.active ? 'Active' : 'Paused'}
+                                </label>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item edit-alert" href="#" data-id="${alert.id}">
+                                        <i class="fas fa-edit me-2"></i>Edit
+                                    </a></li>
+                                    <li><a class="dropdown-item view-matches" href="#" data-id="${alert.id}">
+                                        <i class="fas fa-search me-2"></i>View Matches
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item delete-alert text-danger" href="#" data-id="${alert.id}">
+                                        <i class="fas fa-trash me-2"></i>Delete
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert-details">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <small class="text-muted">Category:</small>
+                                <p class="mb-0">${alert.category || 'All'}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted">Experience:</small>
+                                <p class="mb-0">${alert.experience || 'Any level'}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted">Minimum salary:</small>
+                                <p class="mb-0">${alert.salaryMin ? '$' + alert.salaryMin.toLocaleString() : 'Not specified'}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted">Frequency:</small>
+                                <p class="mb-0">${alert.frequency}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'short'
+            });
+        }
+
+        function updateStatistics() {
+            const activeAlerts = alertsData.filter(a => a.active).length;
+            const totalMatches = alertsData.reduce((sum, a) => sum + a.matchCount, 0);
+            const unreadNotifications = notificationsData.filter(n => !n.read).length;
+            
+            document.getElementById('totalAlerts').textContent = activeAlerts;
+            document.getElementById('matchingJobs').textContent = totalMatches;
+            document.getElementById('notificationsToday').textContent = unreadNotifications;
+        }
+
+        function initializeEventListeners() {
+            // Save new alert
+            document.getElementById('saveAlertBtn').addEventListener('click', () => {
+                const form = document.getElementById('createAlertForm');
+                const formData = new FormData(form);
+                
+                const alertName = document.getElementById('alertName').value;
+                if (!alertName.trim()) {
+                    showToast('Please enter a name for the alert', 'error');
+                    return;
+                }
+                
+                showToast('Alert created successfully', 'success');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('createAlertModal'));
+                modal.hide();
+                form.reset();
+                
+                // Reload alerts (in real app, this would make an API call)
+                setTimeout(() => {
+                    loadAlerts();
+                }, 500);
+            });
+
+            // Toggle alert active/inactive
+            document.addEventListener('change', (e) => {
+                if (e.target.classList.contains('alert-toggle')) {
+                    const alertId = e.target.dataset.id;
+                    const isActive = e.target.checked;
+                    const alert = alertsData.find(a => a.id == alertId);
+                    
+                    if (alert) {
+                        alert.active = isActive;
+                        const label = e.target.nextElementSibling;
+                        label.textContent = isActive ? 'Active' : 'Paused';
+                        
+                        showToast(
+                            `Alert ${isActive ? 'activated' : 'paused'} successfully`, 
+                            isActive ? 'success' : 'info'
+                        );
+                    }
+                }
+            });
+
+            // Delete alert
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.delete-alert')) {
+                    e.preventDefault();
+                    const alertId = e.target.closest('.delete-alert').dataset.id;
+                    
+                    if (confirm('Are you sure you want to delete this alert?')) {
+                        const alertIndex = alertsData.findIndex(a => a.id == alertId);
+                        if (alertIndex > -1) {
+                            alertsData.splice(alertIndex, 1);
+                            loadAlerts();
+                            showToast('Alert deleted successfully', 'success');
+                        }
+                    }
+                }
+            });
+
+            // View matches
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.view-matches')) {
+                    e.preventDefault();
+                    const alertId = e.target.closest('.view-matches').dataset.id;
+                    window.location.href = `empleos.html?alert=${alertId}`;
+                }
+            });
+
+            // Mark notification as read
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.mark-read')) {
+                    e.preventDefault();
+                    const notificationId = e.target.closest('.mark-read').dataset.id;
+                    const notification = notificationsData.find(n => n.id == notificationId);
+                    
+                    if (notification) {
+                        notification.read = true;
+                        loadRecentNotifications();
+                        showToast('Notification marked as read', 'info');
+                    }
+                }
+            });
+
+            // Mark all as read
+            document.getElementById('markAllReadBtn').addEventListener('click', () => {
+                notificationsData.forEach(n => n.read = true);
+                loadRecentNotifications();
+                showToast('All notifications marked as read', 'success');
+            });
+        }
+    </script>
+</body>
+</html>

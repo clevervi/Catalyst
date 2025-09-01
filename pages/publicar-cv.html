@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Resume - Catalyst</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Navigation will be loaded dynamically -->
+
+    <main class="py-5 mt-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="mb-0"><i class="fas fa-file-alt me-2"></i> Post Resume</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="cvForm">
+                                <!-- Personal Information -->
+                                <div class="mb-5">
+                                    <h4 class="border-bottom pb-2 mb-4">Personal Information</h4>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="firstName" class="form-label">First Name</label>
+                                            <input type="text" class="form-control" id="firstName" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="lastName" class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" id="lastName" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="phone" class="form-label">Phone</label>
+                                            <input type="tel" class="form-control" id="phone">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="location" class="form-label">Location</label>
+                                            <input type="text" class="form-control" id="location" placeholder="City, Country">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="photo" class="form-label">Profile photo</label>
+                                            <input type="file" class="form-control" id="photo" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Professional Profile -->
+                                <div class="mb-5">
+                                    <h4 class="border-bottom pb-2 mb-4">Professional Profile</h4>
+                                    <div class="mb-3">
+                                        <label for="professionalTitle" class="form-label">Professional title</label>
+                                        <input type="text" class="form-control" id="professionalTitle" placeholder="Ex: Full Stack Developer">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="summary" class="form-label">Professional summary</label>
+                                        <textarea class="form-control" id="summary" rows="4" placeholder="Describe your experience, skills and professional goals"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="skills" class="form-label">Technical skills</label>
+                                        <select class="form-select" multiple id="skills">
+                                            <option value="javascript">JavaScript</option>
+                                            <option value="react">React</option>
+                                            <option value="nodejs">Node.js</option>
+                                            <option value="python">Python</option>
+                                            <option value="java">Java</option>
+                                            <option value="sql">SQL</option>
+                                            <option value="aws">AWS</option>
+                                            <option value="docker">Docker</option>
+                                            <option value="git">Git</option>
+                                        </select>
+                                        <div class="form-text">Hold down the Ctrl key to select multiple skills.</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="languages" class="form-label">Languages</label>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <input type="text" class="form-control" placeholder="Language" id="language1">
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <select class="form-select" id="level1">
+                                                    <option value="basic">Basic</option>
+                                                    <option value="intermediate">Intermediate</option>
+                                                    <option value="advanced">Advanced</option>
+                                                    <option value="native">Native</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="addLanguage">
+                                            <i class="fas fa-plus me-1"></i> Add another language
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Work Experience -->
+                                <div class="mb-5">
+                                    <h4 class="border-bottom pb-2 mb-4">Work Experience</h4>
+                                    <div id="experienceContainer">
+                                        <div class="experience-item card mb-3">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title mb-0">Experience #1</h5>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-experience">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Company</label>
+                                                        <input type="text" class="form-control" name="company[]">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Position</label>
+                                                        <input type="text" class="form-control" name="position[]">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Start date</label>
+                                                        <input type="month" class="form-control" name="startDate[]">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">End date</label>
+                                                        <input type="month" class="form-control" name="endDate[]">
+                                                        <div class="form-check mt-2">
+                                                            <input class="form-check-input" type="checkbox" name="currentJob[]">
+                                                            <label class="form-check-label">Current job</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Job description</label>
+                                                    <textarea class="form-control" name="jobDescription[]" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary" id="addExperience">
+                                        <i class="fas fa-plus me-1"></i> Add experience
+                                    </button>
+                                </div>
+
+                                <!-- Education -->
+                                <div class="mb-5">
+                                    <h4 class="border-bottom pb-2 mb-4">Education</h4>
+                                    <div id="educationContainer">
+                                        <div class="education-item card mb-3">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title mb-0">Education #1</h5>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-education">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Institution</label>
+                                                        <input type="text" class="form-control" name="institution[]">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Degree obtained</label>
+                                                        <input type="text" class="form-control" name="degree[]">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Start date</label>
+                                                        <input type="month" class="form-control" name="eduStartDate[]">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">End date</label>
+                                                        <input type="month" class="form-control" name="eduEndDate[]">
+                                                        <div class="form-check mt-2">
+                                                            <input class="form-check-input" type="checkbox" name="currentEducation[]">
+                                                            <label class="form-check-label">Current studies</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary" id="addEducation">
+                                        <i class="fas fa-plus me-1"></i> Add education
+                                    </button>
+                                </div>
+
+                                <!-- Certifications -->
+                                <div class="mb-5">
+                                    <h4 class="border-bottom pb-2 mb-4">Certifications</h4>
+                                    <div id="certificationContainer">
+                                        <div class="certification-item card mb-3">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title mb-0">Certification #1</h5>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-certification">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Certification name</label>
+                                                        <input type="text" class="form-control" name="certificationName[]">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Issuing organization</label>
+                                                        <input type="text" class="form-control" name="certificationOrg[]">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Date obtained</label>
+                                                        <input type="month" class="form-control" name="certificationDate[]">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Credential ID (optional)</label>
+                                                        <input type="text" class="form-control" name="credentialId[]">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary" id="addCertification">
+                                        <i class="fas fa-plus me-1"></i> Add certification
+                                    </button>
+                                </div>
+
+                                <!-- Job Preferences -->
+                                <div class="mb-5">
+                                    <h4 class="border-bottom pb-2 mb-4">Job Preferences</h4>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="jobType" class="form-label">Desired employment type</label>
+                                            <select class="form-select" id="jobType" multiple>
+                                                <option value="fulltime">Full-time</option>
+                                                <option value="parttime">Part-time</option>
+                                                <option value="freelance">Freelance</option>
+                                                <option value="contract">Contract</option>
+                                                <option value="internship">Internship</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="workMode" class="form-label">Work mode</label>
+                                            <select class="form-select" id="workMode" multiple>
+                                                <option value="remote">Remote</option>
+                                                <option value="hybrid">Hybrid</option>
+                                                <option value="onsite">On-site</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="desiredSalary" class="form-label">Desired salary (USD)</label>
+                                        <input type="number" class="form-control" id="desiredSalary" min="0" step="1000">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="availability" class="form-label">Availability to start</label>
+                                        <select class="form-select" id="availability">
+                                            <option value="immediate">Immediate</option>
+                                            <option value="1week">1 week</option>
+                                            <option value="2weeks">2 weeks</option>
+                                            <option value="1month">1 month</option>
+                                            <option value="2months">2 months</option>
+                                            <option value="3months">3 months or more</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- CV Document -->
+                                <div class="mb-4">
+                                    <h4 class="border-bottom pb-2 mb-4">Resume Document</h4>
+                                    <div class="mb-3">
+                                        <label for="cvFile" class="form-label">Upload CV (PDF, DOC, DOCX)</label>
+                                        <input type="file" class="form-control" id="cvFile" accept=".pdf,.doc,.docx">
+                                        <div class="form-text">Upload your resume in PDF or Word format. Maximum 5MB.</div>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="makePublic">
+                                        <label class="form-check-label" for="makePublic">
+                                            Make my profile public so recruiters can find me
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-secondary me-md-2">Save as draft</button>
+                                    <button type="submit" class="btn btn-accent">Post Resume</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add work experience
+            document.getElementById('addExperience').addEventListener('click', function() {
+                const container = document.getElementById('experienceContainer');
+                const count = container.children.length + 1;
+                const newItem = container.children[0].cloneNode(true);
+                
+                newItem.querySelector('.card-title').textContent = `Experience #${count}`;
+                newItem.querySelectorAll('input').forEach(input => input.value = '');
+                newItem.querySelector('textarea').value = '';
+                
+                container.appendChild(newItem);
+                
+                // Add remove event
+                newItem.querySelector('.remove-experience').addEventListener('click', function() {
+                    if (container.children.length > 1) {
+                        container.removeChild(newItem);
+                    }
+                });
+            });
+            
+            // Add education
+            document.getElementById('addEducation').addEventListener('click', function() {
+                const container = document.getElementById('educationContainer');
+                const count = container.children.length + 1;
+                const newItem = container.children[0].cloneNode(true);
+                
+                newItem.querySelector('.card-title').textContent = `Education #${count}`;
+                newItem.querySelectorAll('input').forEach(input => input.value = '');
+                
+                container.appendChild(newItem);
+                
+                // Add remove event
+                newItem.querySelector('.remove-education').addEventListener('click', function() {
+                    if (container.children.length > 1) {
+                        container.removeChild(newItem);
+                    }
+                });
+            });
+            
+            // Add certification
+            document.getElementById('addCertification').addEventListener('click', function() {
+                const container = document.getElementById('certificationContainer');
+                const count = container.children.length + 1;
+                const newItem = container.children[0].cloneNode(true);
+                
+                newItem.querySelector('.card-title').textContent = `Certification #${count}`;
+                newItem.querySelectorAll('input').forEach(input => input.value = '');
+                
+                container.appendChild(newItem);
+                
+                // Add remove event
+                newItem.querySelector('.remove-certification').addEventListener('click', function() {
+                    if (container.children.length > 1) {
+                        container.removeChild(newItem);
+                    }
+                });
+            });
+            
+            // Add language
+            document.getElementById('addLanguage').addEventListener('click', function() {
+                const languageRow = document.createElement('div');
+                languageRow.className = 'row mt-2';
+                languageRow.innerHTML = `
+                    <div class="col-md-6 mb-2">
+                        <input type="text" class="form-control" placeholder="Language">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <select class="form-select">
+                            <option value="basic">Basic</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                            <option value="native">Native</option>
+                        </select>
+                    </div>
+                `;
+                this.parentNode.insertBefore(languageRow, this);
+            });
+            
+            // Handle form submission
+            document.getElementById('cvForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Resume posted successfully!');
+                // Here would go the logic to send data to the server
+            });
+        });
+    </script>
+
+    <!-- Navigation and Authentication System -->
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { updateAuthUI } from '../js/roles.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation
+            initNavigation('publicar-cv', true);
+            
+            // Update authentication UI
+            updateAuthUI();
+            
+            console.log('✅ Navigation system initialized for pages/publicar-cv.html');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiring Pipeline - Catalyst HR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+    <style>
+        .kanban-board {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px 0;
+            min-height: 600px;
+        }
+
+        .kanban-column {
+            min-width: 300px;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .kanban-column.drag-over {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .kanban-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+
+        .candidate-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid #e5e7eb;
+        }
+
+        .candidate-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .candidate-card.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+            cursor: grabbing;
+        }
+
+        .candidate-card .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .priority-high { border-left-color: #ef4444; }
+        .priority-normal { border-left-color: #3b82f6; }
+        .priority-low { border-left-color: #6b7280; }
+
+        .stage-application .kanban-header { border-left-color: #6b7280; }
+        .stage-screening .kanban-header { border-left-color: #3b82f6; }
+        .stage-interview .kanban-header { border-left-color: #8b5cf6; }
+        .stage-technical .kanban-header { border-left-color: #f59e0b; }
+        .stage-final .kanban-header { border-left-color: #10b981; }
+        .stage-offer .kanban-header { border-left-color: #06b6d4; }
+        .stage-hired .kanban-header { border-left-color: #10b981; }
+        .stage-rejected .kanban-header { border-left-color: #ef4444; }
+
+        .pipeline-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filters-panel {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 768px) {
+            .kanban-board {
+                flex-direction: column;
+            }
+            
+            .kanban-column {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="hr-page">
+    <!-- Navigation will be inserted by role management -->
+
+    <main class="py-5 mt-4">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="fas fa-stream me-2"></i>
+                        Hiring Pipeline
+                    </h2>
+                    <p class="text-muted mb-0">Manage candidate flow through the selection process</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-success" id="export-pipeline">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-primary" id="refresh-pipeline">
+                            <i class="fas fa-sync me-1"></i>Refresh
+                        </button>
+                        <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#analyticsModal">
+                            <i class="fas fa-chart-bar me-1"></i>Analytics
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pipeline Statistics -->
+            <div class="pipeline-stats" id="pipeline-stats">
+                <!-- Stats will be populated by JavaScript -->
+            </div>
+
+            <!-- Filters Panel -->
+            <div class="filters-panel">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <label class="form-label small">Filter by Job</label>
+                        <select class="form-select form-select-sm" id="filter-job">
+                            <option value="">All Jobs</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small">Priority</label>
+                        <select class="form-select form-select-sm" id="filter-priority">
+                            <option value="">All</option>
+                            <option value="high">High</option>
+                            <option value="normal">Normal</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small">Experience</label>
+                        <select class="form-select form-select-sm" id="filter-experience">
+                            <option value="">All</option>
+                            <option value="0-2">0-2 years</option>
+                            <option value="3-5">3-5 years</option>
+                            <option value="5+">5+ years</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small">Search Candidate</label>
+                        <input type="text" class="form-control form-control-sm" id="search-candidate" placeholder="Name or email...">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-outline-secondary btn-sm w-100" id="clear-pipeline-filters">
+                            <i class="fas fa-times me-1"></i>Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kanban Board -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="kanban-board" id="kanban-board">
+                        <!-- Columns will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Candidate Details Modal -->
+    <div class="modal fade" id="candidateModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="candidateModalTitle">Candidate Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="candidate-modal-body">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" id="reject-candidate">
+                        <i class="fas fa-times me-1"></i>Reject
+                    </button>
+                    <button type="button" class="btn btn-outline-info" id="schedule-interview">
+                        <i class="fas fa-calendar me-1"></i>Schedule Interview
+                    </button>
+                    <button type="button" class="btn btn-primary" id="advance-candidate">
+                        <i class="fas fa-arrow-right me-1"></i>Advance Stage
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Modal -->
+    <div class="modal fade" id="analyticsModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Pipeline Analytics</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Conversion by Stage</h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="conversionChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Average Time per Stage</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="time-analytics">
+                                        <!-- Time analytics will be populated -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Detailed Metrics</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Stage</th>
+                                                    <th>Total Candidates</th>
+                                                    <th>Conversion Rate</th>
+                                                    <th>Average Time</th>
+                                                    <th>Dropouts</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="analytics-table">
+                                                <!-- Analytics data will be populated -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { initializeGuards } from '../js/guards.js';
+        import { dataManager, exportImportManager } from '../js/data-manager.js';
+
+        let pipelineStages = [];
+        let candidates = [];
+        let jobs = [];
+        let draggedElement = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation and guards
+            initNavigation('pipeline', true);
+            initializeGuards('pipeline-enhanced.html');
+
+            // Load data and render pipeline
+            loadPipelineData();
+            renderPipeline();
+            updatePipelineStats();
+            populateJobFilter();
+
+            // Event listeners
+            document.getElementById('filter-job').addEventListener('change', filterPipeline);
+            document.getElementById('filter-priority').addEventListener('change', filterPipeline);
+            document.getElementById('filter-experience').addEventListener('change', filterPipeline);
+            document.getElementById('search-candidate').addEventListener('input', filterPipeline);
+            document.getElementById('clear-pipeline-filters').addEventListener('click', clearPipelineFilters);
+            document.getElementById('refresh-pipeline').addEventListener('click', refreshPipeline);
+            document.getElementById('export-pipeline').addEventListener('click', exportPipelineData);
+        });
+
+        function loadPipelineData() {
+            pipelineStages = dataManager.getPipelineStages();
+            candidates = dataManager.getCandidates();
+            jobs = dataManager.getJobs();
+        }
+
+        function renderPipeline() {
+            const board = document.getElementById('kanban-board');
+            board.innerHTML = '';
+
+            pipelineStages.forEach(stage => {
+                const stageCandidates = candidates.filter(candidate => 
+                    candidate.pipeline_stage === stage.key
+                );
+
+                const column = document.createElement('div');
+                column.className = `kanban-column stage-${stage.key}`;
+                column.setAttribute('data-stage', stage.key);
+                
+                column.innerHTML = `
+                    <div class="kanban-header" style="border-left-color: ${stage.color}">
+                        <div>
+                            <h6 class="mb-0">${stage.name}</h6>
+                            <small class="text-muted">${stageCandidates.length} candidates</small>
+                        </div>
+                        <div class="badge" style="background-color: ${stage.color}20; color: ${stage.color}">
+                            ${stageCandidates.length}
+                        </div>
+                    </div>
+                    <div class="candidates-container" data-stage="${stage.key}">
+                        ${stageCandidates.map(candidate => renderCandidateCard(candidate)).join('')}
+                    </div>
+                `;
+
+                // Add drag and drop event listeners
+                const container = column.querySelector('.candidates-container');
+                container.addEventListener('dragover', handleDragOver);
+                container.addEventListener('drop', handleDrop);
+
+                board.appendChild(column);
+            });
+
+            // Add drag events to candidate cards
+            document.querySelectorAll('.candidate-card').forEach(card => {
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        function renderCandidateCard(candidate) {
+            const job = jobs.find(j => j.id === candidate.job_id) || {};
+            const priorityClass = candidate.priority || 'normal';
+            const daysInStage = Math.floor((new Date() - new Date(candidate.stage_entered || candidate.created_at)) / (1000 * 60 * 60 * 24));
+
+            return `
+                <div class="candidate-card priority-${priorityClass}" 
+                     draggable="true" 
+                     data-candidate-id="${candidate.id}"
+                     onclick="showCandidateDetails(${candidate.id})">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="d-flex align-items-center">
+                            <img src="${candidate.avatar || 'https://via.placeholder.com/32/6b7280/white?text=' + candidate.name.substring(0,2)}" 
+                                 class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                            <div>
+                                <div class="fw-bold small">${candidate.name}</div>
+                                <div class="text-muted tiny">${candidate.position}</div>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="dropdown" onclick="event.stopPropagation()">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" onclick="viewCandidateProfile(${candidate.id})">
+                                    <i class="fas fa-user me-2"></i>View Profile
+                                </a>
+                                <a class="dropdown-item" href="#" onclick="scheduleInterview(${candidate.id})">
+                                    <i class="fas fa-calendar me-2"></i>Schedule Interview
+                                </a>
+                                <a class="dropdown-item" href="#" onclick="addNote(${candidate.id})">
+                                    <i class="fas fa-sticky-note me-2"></i>Add Note
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href="#" onclick="rejectCandidate(${candidate.id})">
+                                    <i class="fas fa-times me-2"></i>Reject
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <span class="badge bg-light text-dark small">${job.title || 'Unassigned'}</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center small text-muted">
+                        <span>
+                            <i class="fas fa-star text-warning me-1"></i>
+                            ${candidate.rating || 0}
+                        </span>
+                        <span>${daysInStage} days</span>
+                    </div>
+                    
+                    ${candidate.skills ? `
+                    <div class="mt-2">
+                        ${candidate.skills.slice(0, 3).map(skill => 
+                            `<span class="badge bg-primary bg-opacity-10 text-primary tiny me-1">${skill}</span>`
+                        ).join('')}
+                        ${candidate.skills.length > 3 ? `<span class="tiny text-muted">+${candidate.skills.length - 3}</span>` : ''}
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function updatePipelineStats() {
+            const stats = calculatePipelineStats();
+            const statsContainer = document.getElementById('pipeline-stats');
+            
+            statsContainer.innerHTML = `
+                <div class="stat-card">
+                    <div class="fs-4 fw-bold text-primary">${stats.totalCandidates}</div>
+                    <div class="small text-muted">Total Candidates</div>
+                </div>
+                <div class="stat-card">
+                    <div class="fs-4 fw-bold text-success">${stats.activeCandidates}</div>
+                    <div class="small text-muted">In Process</div>
+                </div>
+                <div class="stat-card">
+                    <div class="fs-4 fw-bold text-info">${stats.hiredThisMonth}</div>
+                    <div class="small text-muted">Hired This Month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="fs-4 fw-bold text-warning">${stats.avgTimeToHire}</div>
+                    <div class="small text-muted">Average Days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="fs-4 fw-bold text-success">${stats.conversionRate}%</div>
+                    <div class="small text-muted">Conversion Rate</div>
+                </div>
+            `;
+        }
+
+        function calculatePipelineStats() {
+            const totalCandidates = candidates.length;
+            const activeCandidates = candidates.filter(c => 
+                !['hired', 'rejected'].includes(c.pipeline_stage)
+            ).length;
+            
+            const thisMonth = new Date();
+            const hiredThisMonth = candidates.filter(c => 
+                c.pipeline_stage === 'hired' && 
+                new Date(c.hired_date || c.created_at).getMonth() === thisMonth.getMonth()
+            ).length;
+
+            const hiredCandidates = candidates.filter(c => c.pipeline_stage === 'hired');
+            const avgTimeToHire = hiredCandidates.length > 0 
+                ? Math.round(hiredCandidates.reduce((acc, c) => {
+                    const start = new Date(c.created_at);
+                    const end = new Date(c.hired_date || new Date());
+                    return acc + (end - start) / (1000 * 60 * 60 * 24);
+                }, 0) / hiredCandidates.length)
+                : 0;
+
+            const conversionRate = totalCandidates > 0 
+                ? Math.round((hiredCandidates.length / totalCandidates) * 100)
+                : 0;
+
+            return {
+                totalCandidates,
+                activeCandidates,
+                hiredThisMonth,
+                avgTimeToHire,
+                conversionRate
+            };
+        }
+
+        function populateJobFilter() {
+            const jobFilter = document.getElementById('filter-job');
+            jobs.forEach(job => {
+                const option = document.createElement('option');
+                option.value = job.id;
+                option.textContent = job.title;
+                jobFilter.appendChild(option);
+            });
+        }
+
+        function filterPipeline() {
+            // Implementation for filtering logic
+            renderPipeline();
+        }
+
+        function clearPipelineFilters() {
+            document.getElementById('filter-job').value = '';
+            document.getElementById('filter-priority').value = '';
+            document.getElementById('filter-experience').value = '';
+            document.getElementById('search-candidate').value = '';
+            renderPipeline();
+        }
+
+        function refreshPipeline() {
+            loadPipelineData();
+            renderPipeline();
+            updatePipelineStats();
+            showToast('Pipeline updated', 'success');
+        }
+
+        // Drag and Drop Handlers
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', e.target.outerHTML);
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            draggedElement = null;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            e.currentTarget.closest('.kanban-column').classList.add('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const column = e.currentTarget.closest('.kanban-column');
+            column.classList.remove('drag-over');
+            
+            if (draggedElement) {
+                const candidateId = parseInt(draggedElement.dataset.candidateId);
+                const newStage = column.dataset.stage;
+                
+                moveCandidateToStage(candidateId, newStage);
+            }
+        }
+
+        function moveCandidateToStage(candidateId, newStage) {
+            const candidate = candidates.find(c => c.id === candidateId);
+            if (!candidate) return;
+
+            const oldStage = candidate.pipeline_stage;
+            candidate.pipeline_stage = newStage;
+            candidate.stage_entered = new Date().toISOString();
+
+            // Update in storage
+            dataManager.setCandidates(candidates);
+
+            // Log the movement
+            console.log(`Moved candidate ${candidate.name} from ${oldStage} to ${newStage}`);
+
+            // Refresh pipeline
+            renderPipeline();
+            updatePipelineStats();
+            
+            showToast(`${candidate.name} moved to ${getPipelineStageName(newStage)}`, 'success');
+        }
+
+        function showCandidateDetails(candidateId) {
+            const candidate = candidates.find(c => c.id === candidateId);
+            if (!candidate) return;
+
+            const job = jobs.find(j => j.id === candidate.job_id) || {};
+            const modalBody = document.getElementById('candidate-modal-body');
+
+            modalBody.innerHTML = `
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <img src="${candidate.avatar || 'https://via.placeholder.com/120/6b7280/white?text=' + candidate.name.substring(0,2)}" 
+                             class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                        <h5>${candidate.name}</h5>
+                        <p class="text-muted">${candidate.position}</p>
+                        <div class="badge bg-info">${getPipelineStageName(candidate.pipeline_stage)}</div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>Email:</strong><br>
+                                <span class="text-muted">${candidate.email}</span>
+                            </div>
+                            <div class="col-6">
+                                <strong>Phone:</strong><br>
+                                <span class="text-muted">${candidate.phone}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>Experience:</strong><br>
+                                <span class="text-muted">${candidate.experience}</span>
+                            </div>
+                            <div class="col-6">
+                                <strong>Location:</strong><br>
+                                <span class="text-muted">${candidate.location}</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Applied for:</strong><br>
+                            <span class="text-muted">${job.title || 'Unassigned'}</span>
+                        </div>
+                        ${candidate.skills ? `
+                        <div class="mb-3">
+                            <strong>Skills:</strong><br>
+                            ${candidate.skills.map(skill => `<span class="badge bg-light text-dark me-1">${skill}</span>`).join('')}
+                        </div>
+                        ` : ''}
+                        ${candidate.summary ? `
+                        <div class="mb-3">
+                            <strong>Summary:</strong><br>
+                            <span class="text-muted">${candidate.summary}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            // Set up modal actions
+            document.getElementById('reject-candidate').onclick = () => rejectCandidate(candidateId);
+            document.getElementById('advance-candidate').onclick = () => advanceCandidate(candidateId);
+            document.getElementById('schedule-interview').onclick = () => scheduleInterview(candidateId);
+
+            new bootstrap.Modal(document.getElementById('candidateModal')).show();
+        }
+
+        function advanceCandidate(candidateId) {
+            const candidate = candidates.find(c => c.id === candidateId);
+            if (!candidate) return;
+
+            const currentStageIndex = pipelineStages.findIndex(s => s.key === candidate.pipeline_stage);
+            if (currentStageIndex < pipelineStages.length - 2) { // Exclude 'rejected' stage
+                const nextStage = pipelineStages[currentStageIndex + 1];
+                if (nextStage.key !== 'rejected') {
+                    moveCandidateToStage(candidateId, nextStage.key);
+                    bootstrap.Modal.getInstance(document.getElementById('candidateModal')).hide();
+                }
+            }
+        }
+
+        function rejectCandidate(candidateId) {
+            if (confirm('Are you sure you want to reject this candidate?')) {
+                moveCandidateToStage(candidateId, 'rejected');
+                bootstrap.Modal.getInstance(document.getElementById('candidateModal')).hide();
+            }
+        }
+
+        function scheduleInterview(candidateId) {
+            // Redirect to interview scheduler with candidate pre-selected
+            window.location.href = `interview-scheduler.html?candidate=${candidateId}`;
+        }
+
+        function viewCandidateProfile(candidateId) {
+            window.location.href = `candidate-detail.html?id=${candidateId}`;
+        }
+
+        function addNote(candidateId) {
+            const note = prompt('Add a note for the candidate:');
+            if (note) {
+                // In a real implementation, this would save to a notes system
+                showToast('Note added successfully', 'success');
+            }
+        }
+
+        function exportPipelineData() {
+            const pipelineData = candidates.map(candidate => {
+                const job = jobs.find(j => j.id === candidate.job_id) || {};
+                return {
+                    name: candidate.name,
+                    email: candidate.email,
+                    position: candidate.position,
+                    job: job.title || 'Unassigned',
+                    stage: getPipelineStageName(candidate.pipeline_stage),
+                    rating: candidate.rating || 0,
+                    experience: candidate.experience,
+                    location: candidate.location,
+                    application_date: candidate.created_at
+                };
+            });
+
+            exportImportManager.exportToCSV(pipelineData, 'pipeline_catalyst.csv');
+            showToast('Pipeline exported successfully', 'success');
+        }
+
+        function getPipelineStageName(stageKey) {
+            const stage = pipelineStages.find(s => s.key === stageKey);
+            return stage ? stage.name : stageKey;
+        }
+
+        function showToast(message, type = 'info') {
+            const alertClass = type === 'error' ? 'danger' : type;
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${alertClass} position-fixed top-0 end-0 m-3`;
+            toast.style.zIndex = '9999';
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Initialize
+        updatePipelineStats();
+
+        // Make functions globally available
+        window.showCandidateDetails = showCandidateDetails;
+        window.viewCandidateProfile = viewCandidateProfile;
+        window.scheduleInterview = scheduleInterview;
+        window.addNote = addNote;
+        window.rejectCandidate = rejectCandidate;
+        window.advanceCandidate = advanceCandidate;
+    </script>
+</body>
+</html>

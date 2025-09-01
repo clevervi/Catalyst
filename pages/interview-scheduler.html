@@ -1,0 +1,964 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Scheduler - Catalyst HR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+    <style>
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e5e7eb;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .calendar-cell {
+            background: white;
+            min-height: 120px;
+            padding: 8px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .calendar-cell:hover {
+            background-color: #f8fafc;
+        }
+        
+        .calendar-cell.other-month {
+            background-color: #f9fafb;
+            color: #9ca3af;
+        }
+        
+        .calendar-cell.today {
+            background-color: #eff6ff;
+            border: 2px solid var(--primary);
+        }
+        
+        .calendar-cell.has-interviews {
+            border-left: 4px solid var(--accent);
+        }
+        
+        .interview-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        
+        .interview-item {
+            font-size: 0.75rem;
+            padding: 2px 4px;
+            margin: 1px 0;
+            border-radius: 3px;
+            background: var(--primary-lightest);
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .interview-item:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+        
+        .interview-item.screening { background: #e0f2fe; color: #0277bd; }
+        .interview-item.technical { background: #fff3e0; color: #f57c00; }
+        .interview-item.cultural { background: #f3e5f5; color: #7b1fa2; }
+        .interview-item.final { background: #e8f5e8; color: #388e3c; }
+        
+        .time-slot {
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 2px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .time-slot:hover {
+            background: #f8fafc;
+            border-color: var(--primary);
+        }
+        
+        .time-slot.occupied {
+            background: #fee2e2;
+            border-color: #ef4444;
+            cursor: not-allowed;
+        }
+        
+        .time-slot.selected {
+            background: var(--primary-lightest);
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body class="hr-page">
+    <!-- Navigation will be inserted by role management -->
+
+    <main class="py-5 mt-4">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        Interview Scheduler
+                    </h2>
+                    <p class="text-muted mb-0">Manage team interviews and schedules</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="view-mode" id="calendar-view" checked>
+                        <label class="btn btn-outline-primary" for="calendar-view">
+                            <i class="fas fa-calendar-week me-1"></i>Calendar
+                        </label>
+                        <input type="radio" class="btn-check" name="view-mode" id="list-view">
+                        <label class="btn btn-outline-primary" for="list-view">
+                            <i class="fas fa-list me-1"></i>List
+                        </label>
+                    </div>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newInterviewModal">
+                        <i class="fas fa-plus me-1"></i>New Interview
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fas fa-filter me-1"></i>Filters
+                        </button>
+                        <div class="dropdown-menu p-3" style="min-width: 250px;">
+                            <h6>Filter by:</h6>
+                            <div class="mb-3">
+                                <label class="form-label small">Interviewer</label>
+                                <select class="form-select form-select-sm" id="interviewer-filter">
+                                    <option value="">All</option>
+                                    <option value="ana.garcia">Ana García</option>
+                                    <option value="carlos.lopez">Carlos López</option>
+                                    <option value="maria.rodriguez">María Rodríguez</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small">Interview Type</label>
+                                <div class="form-check form-check-sm">
+                                    <input class="form-check-input" type="checkbox" id="filter-screening" checked>
+                                    <label class="form-check-label small" for="filter-screening">Screening</label>
+                                </div>
+                                <div class="form-check form-check-sm">
+                                    <input class="form-check-input" type="checkbox" id="filter-technical" checked>
+                                    <label class="form-check-label small" for="filter-technical">Technical</label>
+                                </div>
+                                <div class="form-check form-check-sm">
+                                    <input class="form-check-input" type="checkbox" id="filter-cultural" checked>
+                                    <label class="form-check-label small" for="filter-cultural">Cultural</label>
+                                </div>
+                                <div class="form-check form-check-sm">
+                                    <input class="form-check-input" type="checkbox" id="filter-final" checked>
+                                    <label class="form-check-label small" for="filter-final">Final</label>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-sm w-100">Apply Filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Navigation -->
+            <div class="card mb-4" id="calendar-container">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-secondary btn-sm me-2" id="prev-month">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h5 class="mb-0 me-2" id="current-month">January 2024</h5>
+                        <button class="btn btn-outline-secondary btn-sm" id="next-month">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-outline-primary btn-sm" id="today-btn">Today</button>
+                        <div class="d-flex align-items-center gap-3 text-sm">
+                            <div><span class="interview-dot screening"></span> Screening</div>
+                            <div><span class="interview-dot technical"></span> Technical</div>
+                            <div><span class="interview-dot cultural"></span> Cultural</div>
+                            <div><span class="interview-dot final"></span> Final</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <!-- Calendar Header -->
+                    <div class="calendar-grid border-bottom">
+                        <div class="calendar-cell text-center fw-bold py-2 border-0" style="background: #f8fafc;">Mon</div>
+                        <div class="calendar-cell text-center fw-bold py-2 border-0" style="background: #f8fafc;">Tue</div>
+                        <div class="calendar-cell text-center fw-bold py-2 border-0" style="background: #f8fafc;">Wed</div>
+                        <div class="calendar-cell text-center fw-bold py-2 border-0" style="background: #f8fafc;">Thu</div>
+                        <div class="calendar-cell text-center fw-bold py-2 border-0" style="background: #f8fafc;">Fri</div>
+                        <div class="calendar-cell text-center fw-bold py-2 border-0" style="background: #f8fafc;">Sat</div>
+                        <div class="calendar-cell text-center fw-bold py-2 border-0" style="background: #f8fafc;">Sun</div>
+                    </div>
+                    <!-- Calendar Body -->
+                    <div class="calendar-grid" id="calendar-body">
+                        <!-- Calendar cells will be generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- List View -->
+            <div class="card d-none" id="list-container">
+                <div class="card-header">
+                    <h5 class="mb-0">Upcoming Interviews</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date and Time</th>
+                                    <th>Candidate</th>
+                                    <th>Position</th>
+                                    <th>Interviewer</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="interviews-table-body">
+                                <!-- Table content will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interview Details Sidebar -->
+            <div class="row mt-4">
+                <div class="col-lg-8">
+                    <!-- Daily Schedule -->
+                    <div class="card" id="daily-schedule" style="display: none;">
+                        <div class="card-header">
+                            <h5 class="mb-0">Daily Schedule - <span id="selected-date"></span></h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Available Time Slots</h6>
+                                    <div id="available-slots">
+                                        <!-- Time slots will be populated -->
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Scheduled Interviews</h6>
+                                    <div id="scheduled-interviews">
+                                        <!-- Scheduled interviews will be populated -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <!-- Quick Stats -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">Interview Statistics</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6 mb-3">
+                                    <div class="fs-4 fw-bold text-primary" id="today-interviews">5</div>
+                                    <div class="small text-muted">Today</div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <div class="fs-4 fw-bold text-success" id="week-interviews">23</div>
+                                    <div class="small text-muted">This Week</div>
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-6 mb-3">
+                                    <div class="fs-4 fw-bold text-warning" id="pending-interviews">8</div>
+                                    <div class="small text-muted">Pending</div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <div class="fs-4 fw-bold text-info" id="completed-interviews">45</div>
+                                    <div class="small text-muted">Completed</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="mb-0">Quick Actions</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newInterviewModal">
+                                    <i class="fas fa-plus me-1"></i>New Interview
+                                </button>
+                                <button class="btn btn-outline-info btn-sm" id="sync-calendar">
+                                    <i class="fas fa-sync me-1"></i>Sync Calendar
+                                </button>
+                                <button class="btn btn-outline-success btn-sm" id="export-schedule">
+                                    <i class="fas fa-download me-1"></i>Export Schedule
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- New Interview Modal -->
+    <div class="modal fade" id="newInterviewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Schedule New Interview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="interview-form">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Candidate *</label>
+                                <select class="form-select" id="candidate-select" required>
+                                    <option value="">Select candidate</option>
+                                    <option value="1">Carlos Rodríguez - Full Stack Developer</option>
+                                    <option value="2">Ana María López - UI/UX Designer</option>
+                                    <option value="3">Luis Fernando Silva - DevOps Engineer</option>
+                                    <option value="4">María José García - Product Manager</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Position *</label>
+                                <select class="form-select" id="position-select" required>
+                                    <option value="">Select position</option>
+                                    <option value="senior-developer">Senior Developer</option>
+                                    <option value="ui-designer">UI/UX Designer</option>
+                                    <option value="devops-engineer">DevOps Engineer</option>
+                                    <option value="product-manager">Product Manager</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Interview Type *</label>
+                                <select class="form-select" id="interview-type" required>
+                                    <option value="screening">Screening Interview</option>
+                                    <option value="technical">Technical Interview</option>
+                                    <option value="cultural">Cultural Interview</option>
+                                    <option value="final">Final Interview</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Interviewer *</label>
+                                <select class="form-select" id="interviewer-select" required>
+                                    <option value="">Select interviewer</option>
+                                    <option value="ana.garcia">Ana García - HR Manager</option>
+                                    <option value="carlos.lopez">Carlos López - Tech Lead</option>
+                                    <option value="maria.rodriguez">María Rodríguez - Director</option>
+                                    <option value="jose.martinez">José Martínez - Senior Developer</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Date *</label>
+                                <input type="date" class="form-control" id="interview-date" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Start Time *</label>
+                                <input type="time" class="form-control" id="interview-start-time" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Duration (minutes)</label>
+                                <select class="form-select" id="interview-duration">
+                                    <option value="30">30 minutes</option>
+                                    <option value="45">45 minutes</option>
+                                    <option value="60" selected>1 hour</option>
+                                    <option value="90">1.5 hours</option>
+                                    <option value="120">2 hours</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mode *</label>
+                                <select class="form-select" id="interview-mode" required>
+                                    <option value="virtual">Virtual</option>
+                                    <option value="presencial">In-person</option>
+                                    <option value="telefonica">Phone</option>
+                                    <option value="hibrida">Hybrid</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Room/Link</label>
+                                <input type="text" class="form-control" id="interview-location" placeholder="Meeting room or video link">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Interview Agenda</label>
+                            <textarea class="form-control" rows="3" id="interview-agenda" placeholder="Topics to cover, evaluations, etc."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Additional Notes</label>
+                            <textarea class="form-control" rows="2" id="interview-notes" placeholder="Additional information for the interviewer"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="send-notification" checked>
+                                    <label class="form-check-label" for="send-notification">
+                                        Send notification to candidate
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="add-to-calendar" checked>
+                                    <label class="form-check-label" for="add-to-calendar">
+                                        Add to interviewer's calendar
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-interview">
+                        <i class="fas fa-calendar-plus me-1"></i>Schedule Interview
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interview Details Modal -->
+    <div class="modal fade" id="interviewDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="interview-details-title">Interview Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="interview-details-body">
+                    <!-- Details will be populated by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" id="cancel-interview">
+                        <i class="fas fa-times me-1"></i>Cancel Interview
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" id="reschedule-interview">
+                        <i class="fas fa-calendar-alt me-1"></i>Reschedule
+                    </button>
+                    <button type="button" class="btn btn-success" id="complete-interview">
+                        <i class="fas fa-check me-1"></i>Mark as Completed
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { initializeGuards } from '../js/guards.js';
+
+        let currentDate = new Date();
+        let interviews = generateSampleInterviews();
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation and guards
+            initNavigation('interview-scheduler', true);
+            initializeGuards('interview-scheduler.html');
+
+            // Initialize calendar
+            renderCalendar();
+            renderInterviewsList();
+            updateStats();
+
+            // Event listeners
+            document.getElementById('prev-month').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar();
+            });
+
+            document.getElementById('next-month').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar();
+            });
+
+            document.getElementById('today-btn').addEventListener('click', () => {
+                currentDate = new Date();
+                renderCalendar();
+            });
+
+            // View mode toggles
+            document.querySelectorAll('input[name="view-mode"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    toggleView(e.target.id === 'calendar-view' ? 'calendar' : 'list');
+                });
+            });
+
+            // Save interview
+            document.getElementById('save-interview').addEventListener('click', saveInterview);
+
+            // Set minimum date for interview scheduling
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('interview-date').min = today;
+
+            // Quick actions
+            document.getElementById('sync-calendar').addEventListener('click', syncCalendar);
+            document.getElementById('export-schedule').addEventListener('click', exportSchedule);
+        });
+
+        function generateSampleInterviews() {
+            const candidates = [
+                'Carlos Rodríguez', 'Ana López', 'Luis Silva', 'María García',
+                'Diego Torres', 'Sofia Martínez', 'Andrés Castro', 'Laura Herrera'
+            ];
+            const positions = [
+                'Senior Developer', 'UI/UX Designer', 'DevOps Engineer', 'Product Manager'
+            ];
+            const interviewers = [
+                'Ana García', 'Carlos López', 'María Rodríguez', 'José Martínez'
+            ];
+            const types = ['screening', 'technical', 'cultural', 'final'];
+            const statuses = ['scheduled', 'completed', 'cancelled', 'no-show'];
+
+            const sampleInterviews = [];
+            const today = new Date();
+
+            // Generate interviews for the next 30 days
+            for (let i = 0; i < 30; i++) {
+                const interviewDate = new Date(today);
+                interviewDate.setDate(today.getDate() + Math.floor(Math.random() * 30) - 15);
+                
+                // Skip weekends for some interviews
+                if (interviewDate.getDay() === 0 || interviewDate.getDay() === 6) {
+                    if (Math.random() > 0.3) continue;
+                }
+
+                const interview = {
+                    id: i + 1,
+                    candidate: candidates[Math.floor(Math.random() * candidates.length)],
+                    position: positions[Math.floor(Math.random() * positions.length)],
+                    interviewer: interviewers[Math.floor(Math.random() * interviewers.length)],
+                    type: types[Math.floor(Math.random() * types.length)],
+                    date: interviewDate,
+                    startTime: `${9 + Math.floor(Math.random() * 8)}:${Math.random() > 0.5 ? '00' : '30'}`,
+                    duration: [30, 45, 60, 90][Math.floor(Math.random() * 4)],
+                    mode: ['virtual', 'presencial', 'telefonica'][Math.floor(Math.random() * 3)],
+                    status: statuses[Math.floor(Math.random() * statuses.length)],
+                    location: 'Meeting Room 1',
+                    agenda: 'Review of technical experience, practical test, organizational culture',
+                    notes: 'Candidate with excellent technical profile'
+                };
+
+                sampleInterviews.push(interview);
+            }
+
+            return sampleInterviews.sort((a, b) => a.date - b.date);
+        }
+
+        function renderCalendar() {
+            const monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+
+            document.getElementById('current-month').textContent = 
+                `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1));
+
+            const calendarBody = document.getElementById('calendar-body');
+            calendarBody.innerHTML = '';
+
+            for (let i = 0; i < 42; i++) {
+                const cellDate = new Date(startDate);
+                cellDate.setDate(startDate.getDate() + i);
+
+                const cell = document.createElement('div');
+                cell.className = 'calendar-cell';
+                
+                if (cellDate.getMonth() !== currentDate.getMonth()) {
+                    cell.classList.add('other-month');
+                }
+
+                if (cellDate.toDateString() === new Date().toDateString()) {
+                    cell.classList.add('today');
+                }
+
+                // Get interviews for this date
+                const dateInterviews = interviews.filter(interview => 
+                    interview.date.toDateString() === cellDate.toDateString()
+                );
+
+                if (dateInterviews.length > 0) {
+                    cell.classList.add('has-interviews');
+                }
+
+                cell.innerHTML = `
+                    <div class="fw-bold mb-1">${cellDate.getDate()}</div>
+                    ${dateInterviews.slice(0, 3).map(interview => `
+                        <div class="interview-item ${interview.type}" onclick="showInterviewDetails(${interview.id})" title="${interview.candidate} - ${interview.startTime}">
+                            ${interview.startTime} ${interview.candidate.split(' ')[0]}
+                        </div>
+                    `).join('')}
+                    ${dateInterviews.length > 3 ? `<div class="small text-muted">+${dateInterviews.length - 3} more</div>` : ''}
+                `;
+
+                cell.addEventListener('click', () => showDaySchedule(cellDate));
+                calendarBody.appendChild(cell);
+            }
+        }
+
+        function renderInterviewsList() {
+            const tableBody = document.getElementById('interviews-table-body');
+            const upcomingInterviews = interviews
+                .filter(interview => interview.date >= new Date() && interview.status === 'scheduled')
+                .slice(0, 20);
+
+            tableBody.innerHTML = upcomingInterviews.map(interview => `
+                <tr onclick="showInterviewDetails(${interview.id})" style="cursor: pointer;">
+                    <td>
+                        <div class="fw-bold">${interview.date.toLocaleDateString('en-US')}</div>
+                        <div class="small text-muted">${interview.startTime} (${interview.duration} min)</div>
+                    </td>
+                    <td>
+                        <div class="fw-bold">${interview.candidate}</div>
+                        <div class="small text-muted">ID: ${interview.id}</div>
+                    </td>
+                    <td>${interview.position}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="me-2">${interview.interviewer}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge bg-${getTypeColor(interview.type)}">${getTypeLabel(interview.type)}</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-${getStatusColor(interview.status)}">${getStatusLabel(interview.status)}</span>
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); editInterview(${interview.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); cancelInterview(${interview.id})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function toggleView(view) {
+            const calendarContainer = document.getElementById('calendar-container');
+            const listContainer = document.getElementById('list-container');
+
+            if (view === 'calendar') {
+                calendarContainer.classList.remove('d-none');
+                listContainer.classList.add('d-none');
+            } else {
+                calendarContainer.classList.add('d-none');
+                listContainer.classList.remove('d-none');
+            }
+        }
+
+        function showDaySchedule(date) {
+            const dailySchedule = document.getElementById('daily-schedule');
+            const selectedDateElement = document.getElementById('selected-date');
+            
+            selectedDateElement.textContent = date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            const dayInterviews = interviews.filter(interview => 
+                interview.date.toDateString() === date.toDateString()
+            );
+
+            // Generate time slots
+            const availableSlots = document.getElementById('available-slots');
+            const scheduledInterviews = document.getElementById('scheduled-interviews');
+            
+            const slots = [];
+            for (let hour = 9; hour <= 17; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                    const isOccupied = dayInterviews.some(interview => interview.startTime === timeStr);
+                    
+                    slots.push({
+                        time: timeStr,
+                        occupied: isOccupied,
+                        interview: isOccupied ? dayInterviews.find(i => i.startTime === timeStr) : null
+                    });
+                }
+            }
+
+            availableSlots.innerHTML = slots
+                .filter(slot => !slot.occupied)
+                .slice(0, 10)
+                .map(slot => `
+                    <div class="time-slot" onclick="quickSchedule('${slot.time}')">
+                        <i class="fas fa-clock me-2 text-success"></i>
+                        ${slot.time}
+                    </div>
+                `).join('');
+
+            scheduledInterviews.innerHTML = dayInterviews.map(interview => `
+                <div class="border rounded p-2 mb-2" onclick="showInterviewDetails(${interview.id})">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="fw-bold">${interview.startTime} - ${interview.candidate}</div>
+                            <div class="small text-muted">${interview.position}</div>
+                            <div class="small">
+                                <span class="badge bg-${getTypeColor(interview.type)}">${getTypeLabel(interview.type)}</span>
+                            </div>
+                        </div>
+                        <div class="text-muted">
+                            <i class="fas fa-user me-1"></i>
+                            ${interview.interviewer.split(' ')[0]}
+                        </div>
+                    </div>
+                </div>
+            `).join('') || '<div class="text-center text-muted py-3">No interviews scheduled</div>';
+
+            dailySchedule.style.display = 'block';
+        }
+
+        function saveInterview() {
+            const form = document.getElementById('interview-form');
+            const formData = new FormData(form);
+
+            // Validate required fields
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Create new interview object
+            const newInterview = {
+                id: interviews.length + 1,
+                candidate: document.getElementById('candidate-select').selectedOptions[0].textContent.split(' - ')[0],
+                position: document.getElementById('position-select').selectedOptions[0].textContent,
+                interviewer: document.getElementById('interviewer-select').selectedOptions[0].textContent.split(' - ')[0],
+                type: document.getElementById('interview-type').value,
+                date: new Date(document.getElementById('interview-date').value),
+                startTime: document.getElementById('interview-start-time').value,
+                duration: parseInt(document.getElementById('interview-duration').value),
+                mode: document.getElementById('interview-mode').value,
+                location: document.getElementById('interview-location').value,
+                agenda: document.getElementById('interview-agenda').value,
+                notes: document.getElementById('interview-notes').value,
+                status: 'scheduled'
+            };
+
+            interviews.push(newInterview);
+
+            // Close modal and refresh views
+            const modal = bootstrap.Modal.getInstance(document.getElementById('newInterviewModal'));
+            modal.hide();
+
+            renderCalendar();
+            renderInterviewsList();
+            updateStats();
+
+            showToast('Interview scheduled successfully', 'success');
+            form.reset();
+        }
+
+        function showInterviewDetails(interviewId) {
+            const interview = interviews.find(i => i.id === interviewId);
+            if (!interview) return;
+
+            const modal = document.getElementById('interviewDetailsModal');
+            const title = document.getElementById('interview-details-title');
+            const body = document.getElementById('interview-details-body');
+
+            title.textContent = `Interview with ${interview.candidate}`;
+
+            body.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Candidate Information</h6>
+                        <p><strong>Name:</strong> ${interview.candidate}</p>
+                        <p><strong>Position:</strong> ${interview.position}</p>
+                        <p><strong>Status:</strong> <span class="badge bg-${getStatusColor(interview.status)}">${getStatusLabel(interview.status)}</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Interview Details</h6>
+                        <p><strong>Date:</strong> ${interview.date.toLocaleDateString('en-US')}</p>
+                        <p><strong>Time:</strong> ${interview.startTime} (${interview.duration} min)</p>
+                        <p><strong>Type:</strong> <span class="badge bg-${getTypeColor(interview.type)}">${getTypeLabel(interview.type)}</span></p>
+                        <p><strong>Mode:</strong> ${interview.mode}</p>
+                        <p><strong>Interviewer:</strong> ${interview.interviewer}</p>
+                    </div>
+                </div>
+                ${interview.location ? `<p><strong>Location:</strong> ${interview.location}</p>` : ''}
+                ${interview.agenda ? `<div class="mb-3"><h6>Agenda</h6><p>${interview.agenda}</p></div>` : ''}
+                ${interview.notes ? `<div class="mb-3"><h6>Notes</h6><p>${interview.notes}</p></div>` : ''}
+            `;
+
+            // Set up modal action buttons
+            document.getElementById('cancel-interview').onclick = () => cancelInterview(interviewId);
+            document.getElementById('complete-interview').onclick = () => completeInterview(interviewId);
+
+            new bootstrap.Modal(modal).show();
+        }
+
+        function cancelInterview(interviewId) {
+            if (confirm('Are you sure you want to cancel this interview?')) {
+                const interview = interviews.find(i => i.id === interviewId);
+                if (interview) {
+                    interview.status = 'cancelled';
+                    renderCalendar();
+                    renderInterviewsList();
+                    updateStats();
+                    showToast('Interview cancelled', 'warning');
+                }
+            }
+        }
+
+        function completeInterview(interviewId) {
+            const interview = interviews.find(i => i.id === interviewId);
+            if (interview) {
+                interview.status = 'completed';
+                renderCalendar();
+                renderInterviewsList();
+                updateStats();
+                showToast('Interview marked as completed', 'success');
+            }
+        }
+
+        function updateStats() {
+            const today = new Date();
+            const todayInterviews = interviews.filter(i => 
+                i.date.toDateString() === today.toDateString() && i.status === 'scheduled'
+            ).length;
+
+            const weekStart = new Date(today);
+            weekStart.setDate(today.getDate() - today.getDay() + 1);
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+
+            const weekInterviews = interviews.filter(i => 
+                i.date >= weekStart && i.date <= weekEnd && i.status === 'scheduled'
+            ).length;
+
+            const pendingInterviews = interviews.filter(i => i.status === 'scheduled').length;
+            const completedInterviews = interviews.filter(i => i.status === 'completed').length;
+
+            document.getElementById('today-interviews').textContent = todayInterviews;
+            document.getElementById('week-interviews').textContent = weekInterviews;
+            document.getElementById('pending-interviews').textContent = pendingInterviews;
+            document.getElementById('completed-interviews').textContent = completedInterviews;
+        }
+
+        function syncCalendar() {
+            showToast('Syncing with external calendar...', 'info');
+            setTimeout(() => {
+                showToast('Calendar synced successfully', 'success');
+            }, 2000);
+        }
+
+        function exportSchedule() {
+            const csvContent = interviews.map(i => 
+                `${i.date.toISOString()},${i.candidate},${i.position},${i.interviewer},${i.type},${i.status}`
+            ).join('\n');
+
+            const blob = new Blob(['Date,Candidate,Position,Interviewer,Type,Status\n' + csvContent], 
+                { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'interview_schedule.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+            showToast('Schedule exported successfully', 'success');
+        }
+
+        function getTypeColor(type) {
+            const colors = {
+                'screening': 'info',
+                'technical': 'warning', 
+                'cultural': 'primary',
+                'final': 'success'
+            };
+            return colors[type] || 'secondary';
+        }
+
+        function getTypeLabel(type) {
+            const labels = {
+                'screening': 'Screening',
+                'technical': 'Technical',
+                'cultural': 'Cultural', 
+                'final': 'Final'
+            };
+            return labels[type] || type;
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'scheduled': 'primary',
+                'completed': 'success',
+                'cancelled': 'danger',
+                'no-show': 'warning'
+            };
+            return colors[status] || 'secondary';
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'scheduled': 'Scheduled',
+                'completed': 'Completed',
+                'cancelled': 'Cancelled',
+                'no-show': 'No Show'
+            };
+            return labels[status] || status;
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
+            toast.style.zIndex = '9999';
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Make functions globally available
+        window.showInterviewDetails = showInterviewDetails;
+        window.cancelInterview = cancelInterview;
+        window.editInterview = (id) => showToast('Edit function in development', 'info');
+    </script>
+</body>
+</html>
+```

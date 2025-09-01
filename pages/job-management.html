@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Management - Catalyst HR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+</head>
+<body class="hr-page">
+    <!-- Navigation will be inserted by role management -->
+
+    <main class="py-5 mt-4">
+        <div class="container">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">Job Management</h2>
+                    <p class="text-muted mb-0">Manage all the organization's job postings</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#publishJobModal">
+                        <i class="fas fa-plus me-1"></i> Post Job
+                    </button>
+                    <button class="btn btn-outline-secondary" id="bulk-actions-btn" disabled>
+                        <i class="fas fa-tasks me-1"></i> Bulk Actions
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn btn-accent dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-download me-1"></i> Export
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" id="export-excel"><i class="fas fa-file-excel me-1"></i> Excel</a></li>
+                            <li><a class="dropdown-item" href="#" id="export-csv"><i class="fas fa-file-csv me-1"></i> CSV</a></li>
+                            <li><a class="dropdown-item" href="#" id="export-pdf"><i class="fas fa-file-pdf me-1"></i> PDF</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-briefcase fa-2x mb-2"></i>
+                            <h3 class="card-title" id="total-jobs">47</h3>
+                            <p class="card-text">Total Jobs</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-eye fa-2x mb-2"></i>
+                            <h3 class="card-title" id="active-jobs">28</h3>
+                            <p class="card-text">Active Jobs</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-clock fa-2x mb-2"></i>
+                            <h3 class="card-title" id="pending-jobs">12</h3>
+                            <p class="card-text">Pending Approval</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-2x mb-2"></i>
+                            <h3 class="card-title" id="total-applications">1,243</h3>
+                            <p class="card-text">Total Applications</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter Section -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="search-jobs" placeholder="Search jobs by title, department...">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" id="department-filter">
+                                <option value="">All departments</option>
+                                <option value="tecnologia">Technology</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="ventas">Sales</option>
+                                <option value="rrhh">Human Resources</option>
+                                <option value="finanzas">Finance</option>
+                                <option value="operaciones">Operations</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" id="status-filter">
+                                <option value="">All statuses</option>
+                                <option value="draft">Draft</option>
+                                <option value="pending">Pending</option>
+                                <option value="active">Active</option>
+                                <option value="paused">Paused</option>
+                                <option value="closed">Closed</option>
+                                <option value="expired">Expired</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" id="level-filter">
+                                <option value="">All levels</option>
+                                <option value="junior">Junior</option>
+                                <option value="semi-senior">Semi-Senior</option>
+                                <option value="senior">Senior</option>
+                                <option value="lead">Lead</option>
+                                <option value="manager">Manager</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-secondary w-100" id="clear-filters">
+                                <i class="fas fa-times me-1"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Controls -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center">
+                    <span class="text-muted me-3" id="results-count">Showing 1-10 of 47 results</span>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <input type="radio" class="btn-check" name="view-mode" id="list-view" checked>
+                        <label class="btn btn-outline-primary" for="list-view"><i class="fas fa-list"></i></label>
+                        <input type="radio" class="btn-check" name="view-mode" id="card-view">
+                        <label class="btn btn-outline-primary" for="card-view"><i class="fas fa-th"></i></label>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <label class="form-label me-2 mb-0">Sort by:</label>
+                    <select class="form-select form-select-sm" style="width: auto;" id="sort-jobs">
+                        <option value="date-desc">Date (newest)</option>
+                        <option value="date-asc">Date (oldest)</option>
+                        <option value="title-asc">Title (A-Z)</option>
+                        <option value="title-desc">Title (Z-A)</option>
+                        <option value="applications-desc">Most applications</option>
+                        <option value="deadline-asc">Nearest deadline</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Jobs List/Grid -->
+            <div class="card">
+                <div class="card-body p-0">
+                    <!-- List View -->
+                    <div id="jobs-list-view">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="40">
+                                            <input type="checkbox" class="form-check-input" id="select-all-jobs">
+                                        </th>
+                                        <th>Title / Department</th>
+                                        <th>Status</th>
+                                        <th>Level</th>
+                                        <th>Applications</th>
+                                        <th>Deadline</th>
+                                        <th>Creation Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="jobs-tbody">
+                                    <!-- Jobs will be loaded dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card View -->
+                    <div id="jobs-card-view" class="p-3 d-none">
+                        <div class="row" id="jobs-cards">
+                            <!-- Cards will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div>
+                    <select class="form-select form-select-sm" style="width: auto;" id="items-per-page">
+                        <option value="10">10 per page</option>
+                        <option value="25">25 per page</option>
+                        <option value="50">50 per page</option>
+                    </select>
+                </div>
+                <nav>
+                    <ul class="pagination mb-0" id="pagination">
+                        <!-- Pagination will be generated dynamically -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </main>
+
+    <!-- Publish Job Modal -->
+    <div class="modal fade" id="publishJobModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Post New Job</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="publish-job-form">
+                        <div class="row">
+                            <!-- Basic Information -->
+                            <div class="col-md-8">
+                                <h6 class="text-muted mb-3">Basic Information</h6>
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <label for="job-title" class="form-label">Job Title *</label>
+                                        <input type="text" class="form-control" id="job-title" required placeholder="e.g. Senior Frontend Developer">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="job-code" class="form-label">Job Code</label>
+                                        <input type="text" class="form-control" id="job-code" placeholder="Auto-generated">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="job-department" class="form-label">Department *</label>
+                                        <select class="form-select" id="job-department" required>
+                                            <option value="">Select department...</option>
+                                            <option value="tecnologia">Technology</option>
+                                            <option value="marketing">Marketing</option>
+                                            <option value="ventas">Sales</option>
+                                            <option value="rrhh">Human Resources</option>
+                                            <option value="finanzas">Finance</option>
+                                            <option value="operaciones">Operations</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="job-manager" class="form-label">Hiring Manager *</label>
+                                        <select class="form-select" id="job-manager" required>
+                                            <option value="">Select manager...</option>
+                                            <!-- Options will be loaded dynamically -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="job-level" class="form-label">Experience Level *</label>
+                                        <select class="form-select" id="job-level" required>
+                                            <option value="">Select level...</option>
+                                            <option value="junior">Junior (0-2 years)</option>
+                                            <option value="semi-senior">Semi-Senior (2-5 years)</option>
+                                            <option value="senior">Senior (5+ years)</option>
+                                            <option value="lead">Lead/Architect</option>
+                                            <option value="manager">Manager</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="job-type" class="form-label">Job Type *</label>
+                                        <select class="form-select" id="job-type" required>
+                                            <option value="">Select type...</option>
+                                            <option value="tiempo-completo">Full Time</option>
+                                            <option value="medio-tiempo">Part Time</option>
+                                            <option value="contrato">Contract</option>
+                                            <option value="freelance">Freelance</option>
+                                            <option value="practicas">Internship</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="job-modality" class="form-label">Work Modality *</label>
+                                        <select class="form-select" id="job-modality" required>
+                                            <option value="">Select modality...</option>
+                                            <option value="presencial">On-site</option>
+                                            <option value="remoto">Remote</option>
+                                            <option value="hibrido">Hybrid</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="job-location" class="form-label">Location *</label>
+                                        <input type="text" class="form-control" id="job-location" required placeholder="City, Country">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="job-openings" class="form-label">Available Positions</label>
+                                        <input type="number" class="form-control" id="job-openings" value="1" min="1">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="job-priority" class="form-label">Priority</label>
+                                        <select class="form-select" id="job-priority">
+                                            <option value="normal">Normal</option>
+                                            <option value="high">High</option>
+                                            <option value="urgent">Urgent</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Settings & Dates -->
+                            <div class="col-md-4">
+                                <h6 class="text-muted mb-3">Settings and Dates</h6>
+                                
+                                <div class="mb-3">
+                                    <label for="job-deadline" class="form-label">Application Deadline *</label>
+                                    <input type="date" class="form-control" id="job-deadline" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="job-start-date" class="form-label">Estimated Start Date</label>
+                                    <input type="date" class="form-control" id="job-start-date">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Initial Status</label>
+                                    <div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="initial-status" id="status-draft" value="draft">
+                                            <label class="form-check-label" for="status-draft">Draft</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="initial-status" id="status-pending" value="pending" checked>
+                                            <label class="form-check-label" for="status-pending">Submit for approval</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="initial-status" id="status-active" value="active">
+                                            <label class="form-check-label" for="status-active">Publish immediately</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Publication Options</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="publish-internal" checked>
+                                        <label class="form-check-label" for="publish-internal">Internal portal</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="publish-external">
+                                        <label class="form-check-label" for="publish-external">External portals</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="publish-linkedin">
+                                        <label class="form-check-label" for="publish-linkedin">LinkedIn</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Salary Information -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6 class="text-muted mb-3">Salary Information</h6>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="salary-min" class="form-label">Minimum Salary</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="salary-min" placeholder="3000000">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="salary-max" class="form-label">Maximum Salary</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="salary-max" placeholder="5000000">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="salary-currency" class="form-label">Currency</label>
+                                        <select class="form-select" id="salary-currency">
+                                            <option value="COP">COP (Colombian Peso)</option>
+                                            <option value="USD">USD (Dollar)</option>
+                                            <option value="EUR">EUR (Euro)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label">Show Salary</label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="show-salary">
+                                            <label class="form-check-label" for="show-salary">Visible in the posting</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Job Description -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6 class="text-muted mb-3">Job Description</h6>
+                                <div class="mb-3">
+                                    <label for="job-summary" class="form-label">Job Summary *</label>
+                                    <textarea class="form-control" id="job-summary" rows="3" required placeholder="Brief description that will appear in listings..."></textarea>
+                                    <div class="form-text">Maximum 250 characters</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="job-description" class="form-label">Full Description *</label>
+                                    <textarea class="form-control" id="job-description" rows="5" required placeholder="Describe the main responsibilities of the position..."></textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="job-requirements" class="form-label">Requirements *</label>
+                                    <textarea class="form-control" id="job-requirements" rows="4" required placeholder="List the required qualifications (one per line)..."></textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="job-preferred" class="form-label">Preferred Qualifications</label>
+                                    <textarea class="form-control" id="job-preferred" rows="3" placeholder="Desirable but not mandatory skills or experiences..."></textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="job-benefits" class="form-label">Benefits</label>
+                                    <textarea class="form-control" id="job-benefits" rows="3" placeholder="List the benefits offered..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skills and Tags -->
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <label for="job-skills" class="form-label">Required Skills</label>
+                                <input type="text" class="form-control" id="job-skills" placeholder="JavaScript, React, Node.js (comma-separated)">
+                                <div class="form-text">Press Enter to add each skill</div>
+                                <div id="skills-tags" class="mt-2">
+                                    <!-- Skill tags will be displayed here -->
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="job-tags" class="form-label">Tags</label>
+                                <input type="text" class="form-control" id="job-tags" placeholder="remote, startup, innovation">
+                                <div class="form-text">Tags to improve searchability</div>
+                                <div id="job-tags-display" class="mt-2">
+                                    <!-- Tags will be displayed here -->
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-primary" id="save-draft">
+                        <i class="fas fa-save me-1"></i> Save Draft
+                    </button>
+                    <button type="button" class="btn btn-accent" id="publish-job">
+                        <i class="fas fa-paper-plane me-1"></i> Post Job
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Detail Modal -->
+    <div class="modal fade" id="jobDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title" id="job-detail-title">Job Title</h5>
+                        <small class="text-muted" id="job-detail-info">Additional Information</small>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="job-detail-content">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="edit-job">
+                        <i class="fas fa-edit me-1"></i> Edit Job
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Actions Modal -->
+    <div class="modal fade" id="bulkActionsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Bulk Actions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>You have selected <span id="bulk-selected-count">0</span> jobs.</p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success" id="bulk-activate">
+                            <i class="fas fa-play me-1"></i> Activate Jobs
+                        </button>
+                        <button class="btn btn-warning" id="bulk-pause">
+                            <i class="fas fa-pause me-1"></i> Pause Jobs
+                        </button>
+                        <button class="btn btn-info" id="bulk-close">
+                            <i class="fas fa-stop me-1"></i> Close Jobs
+                        </button>
+                        <button class="btn btn-danger" data-admin-only="true" id="bulk-delete">
+                            <i class="fas fa-trash me-1"></i> Delete Jobs
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../js/job-management.js"></script>
+
+    <!-- Navigation and Role Management -->
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { updateAuthUI, ROLES } from '../js/roles.js';
+        import { initPageWithGuards } from '../js/guards.js';
+        
+        // Initialize page with HR role guards (Admin, Recruiter, Hiring Manager)
+        initPageWithGuards({
+            pageName: 'job-management.html',
+            requiredRoles: [ROLES.ADMIN, ROLES.RECRUITER, ROLES.HIRING_MANAGER],
+            authRequired: true,
+            basePath: '../',
+            onAccessGranted: (user) => {
+                // Initialize navigation only after access is confirmed
+                initNavigation('job-management', true);
+                updateAuthUI();
+                console.log('✅ Job management initialized for user:', user.firstName);
+            },
+            onAccessDenied: () => {
+                console.log('❌ Access denied to job management');
+            }
+        });
+    </script>
+</body>
+</html>

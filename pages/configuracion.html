@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="En">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings - Catalyst HR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+</head>
+<body class="admin-page">
+    <!-- Navigation will be inserted by role management -->
+
+    <main class="py-5 mt-4">
+        <div class="container">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="fas fa-cogs me-2"></i>
+                        System Settings
+                    </h2>
+                    <p class="text-muted mb-0">Manage the general settings of Catalyst HR</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary" id="reset-config">
+                        <i class="fas fa-undo me-1"></i> Reset
+                    </button>
+                    <button class="btn btn-success" id="save-config">
+                        <i class="fas fa-save me-1"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Configuration Menu -->
+                <div class="col-lg-3">
+                    <div class="list-group" id="config-menu" role="tablist">
+                        <a class="list-group-item list-group-item-action active" id="general-tab" data-bs-toggle="list" href="#general" role="tab">
+                            <i class="fas fa-sliders-h me-2"></i>General
+                        </a>
+                        <a class="list-group-item list-group-item-action" id="users-tab" data-bs-toggle="list" href="#users" role="tab">
+                            <i class="fas fa-users me-2"></i>Users
+                        </a>
+                        <a class="list-group-item list-group-item-action" id="jobs-tab" data-bs-toggle="list" href="#jobs" role="tab">
+                            <i class="fas fa-briefcase me-2"></i>Jobs
+                        </a>
+                        <a class="list-group-item list-group-item-action" id="notifications-tab" data-bs-toggle="list" href="#notifications" role="tab">
+                            <i class="fas fa-bell me-2"></i>Notifications
+                        </a>
+                        <a class="list-group-item list-group-item-action" id="security-tab" data-bs-toggle="list" href="#security" role="tab">
+                            <i class="fas fa-shield-alt me-2"></i>Security
+                        </a>
+                        <a class="list-group-item list-group-item-action" id="integrations-tab" data-bs-toggle="list" href="#integrations" role="tab">
+                            <i class="fas fa-plug me-2"></i>Integrations
+                        </a>
+                        <a class="list-group-item list-group-item-action" id="backup-tab" data-bs-toggle="list" href="#backup" role="tab">
+                            <i class="fas fa-database me-2"></i>Backups
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Configuration Content -->
+                <div class="col-lg-9">
+                    <div class="tab-content" id="config-content">
+                        <!-- General Configuration -->
+                        <div class="tab-pane fade show active" id="general" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">General Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">System Name</label>
+                                            <input type="text" class="form-control" id="system-name" value="Catalyst HR System">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Version</label>
+                                            <input type="text" class="form-control" id="system-version" value="2.1.0" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Default Language</label>
+                                            <select class="form-select" id="default-language">
+                                                <option value="es" selected>Spanish</option>
+                                                <option value="en">English</option>
+                                                <option value="pt">Portuguese</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Timezone</label>
+                                            <select class="form-select" id="timezone">
+                                                <option value="America/Bogota" selected>Bogotá (GMT-5)</option>
+                                                <option value="America/New_York">New York (GMT-5)</option>
+                                                <option value="Europe/Madrid">Madrid (GMT+1)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Company Description</label>
+                                            <textarea class="form-control" rows="3" id="company-description">Catalyst HR is the leading platform in Colombia to connect technology professionals with the best job opportunities.</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">System Logo</label>
+                                            <div class="d-flex align-items-center">
+                                                <img src="../img/image.png" alt="Current logo" height="50" class="me-3">
+                                                <input type="file" class="form-control" accept="image/*" id="logo-upload">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Primary Color</label>
+                                            <input type="color" class="form-control form-control-color" id="primary-color" value="#1e40af">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Users Configuration -->
+                        <div class="tab-pane fade" id="users" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">User Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Automatic Registration</label>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="auto-registration" checked>
+                                                <label class="form-check-label" for="auto-registration">
+                                                    Allow automatic registration
+                                                </label>
+                                            </div>
+                                            <div class="form-text">Users can register without prior approval</div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Email Verification</label>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="email-verification" checked>
+                                                <label class="form-check-label" for="email-verification">
+                                                    Require email verification
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Default Role for New Users</label>
+                                            <select class="form-select" id="default-role">
+                                                <option value="candidate" selected>Candidate</option>
+                                                <option value="user">User</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Session Time (minutes)</label>
+                                            <input type="number" class="form-control" id="session-timeout" value="120" min="30" max="1440">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12 mb-3">
+                                            <label class="form-label">Password Policy</label>
+                                            <div class="border p-3 rounded">
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="password-length" checked>
+                                                    <label class="form-check-label" for="password-length">
+                                                        Minimum 8 characters
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="password-uppercase" checked>
+                                                    <label class="form-check-label" for="password-uppercase">
+                                                        At least one uppercase letter
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="password-numbers" checked>
+                                                    <label class="form-check-label" for="password-numbers">
+                                                        At least one number
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="password-special">
+                                                    <label class="form-check-label" for="password-special">
+                                                        At least one special character
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Jobs Configuration -->
+                        <div class="tab-pane fade" id="jobs" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Job Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Default Duration (days)</label>
+                                            <input type="number" class="form-control" id="job-duration" value="30" min="1" max="365">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Application Limit per Job</label>
+                                            <input type="number" class="form-control" id="application-limit" value="100" min="10" max="1000">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Job Approval</label>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="job-approval">
+                                                <label class="form-check-label" for="job-approval">
+                                                    Require admin approval
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Notify New Jobs</label>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="notify-jobs" checked>
+                                                <label class="form-check-label" for="notify-jobs">
+                                                    Send notifications
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Allowed Job Categories</label>
+                                        <div class="border p-3 rounded">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="cat-development" checked>
+                                                <label class="form-check-label" for="cat-development">Development</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="cat-design" checked>
+                                                <label class="form-check-label" for="cat-design">Design</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="cat-marketing" checked>
+                                                <label class="form-check-label" for="cat-marketing">Marketing</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="cat-sales" checked>
+                                                <label class="form-check-label" for="cat-sales">Sales</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="cat-hr">
+                                                <label class="form-check-label" for="cat-hr">HR</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notifications Configuration -->
+                        <div class="tab-pane fade" id="notifications" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Notification Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">SMTP Server</label>
+                                            <input type="text" class="form-control" id="smtp-server" placeholder="smtp.gmail.com">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">SMTP Port</label>
+                                            <input type="number" class="form-control" id="smtp-port" value="587">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">SMTP User</label>
+                                            <input type="email" class="form-control" id="smtp-user" placeholder="noreply@catalyst.com">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">SMTP Password</label>
+                                            <input type="password" class="form-control" id="smtp-password">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Active Notification Types</label>
+                                        <div class="border p-3 rounded">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="notify-applications" checked>
+                                                <label class="form-check-label" for="notify-applications">
+                                                    New applications
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="notify-interviews" checked>
+                                                <label class="form-check-label" for="notify-interviews">
+                                                    Scheduled interviews
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" id="notify-status" checked>
+                                                <label class="form-check-label" for="notify-status">
+                                                    Status changes
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="notify-system">
+                                                <label class="form-check-label" for="notify-system">
+                                                    System notifications
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-outline-primary" id="test-email">
+                                        <i class="fas fa-paper-plane me-1"></i> Send Test Email
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Configuration -->
+                        <div class="tab-pane fade" id="security" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Security Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Maximum Login Attempts</label>
+                                            <input type="number" class="form-control" id="max-login-attempts" value="3" min="1" max="10">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Lockout Time (minutes)</label>
+                                            <input type="number" class="form-control" id="lockout-duration" value="15" min="5" max="60">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Two-Factor Authentication</label>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="two-factor">
+                                                <label class="form-check-label" for="two-factor">
+                                                    Enable 2FA
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Activity Log</label>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="activity-log" checked>
+                                                <label class="form-check-label" for="activity-log">
+                                                    Log activities
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Blocked IPs</label>
+                                            <textarea class="form-control" rows="3" id="blocked-ips" placeholder="One IP per line (e.g.: 192.168.1.1)"></textarea>
+                                            <div class="form-text">List of system blocked IP addresses</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        <strong>Warning:</strong> Changes to security settings may affect system access.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Integrations Configuration -->
+                        <div class="tab-pane fade" id="integrations" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">External Integrations</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <div class="card border">
+                                                <div class="card-body text-center">
+                                                    <i class="fab fa-google fa-2x text-warning mb-2"></i>
+                                                    <h6>Google Workspace</h6>
+                                                    <div class="form-check form-switch d-flex justify-content-center">
+                                                        <input class="form-check-input" type="checkbox" id="google-integration">
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-primary mt-2">Configure</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="card border">
+                                                <div class="card-body text-center">
+                                                    <i class="fab fa-microsoft fa-2x text-primary mb-2"></i>
+                                                    <h6>Microsoft 365</h6>
+                                                    <div class="form-check form-switch d-flex justify-content-center">
+                                                        <input class="form-check-input" type="checkbox" id="microsoft-integration">
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-primary mt-2">Configure</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <div class="card border">
+                                                <div class="card-body text-center">
+                                                    <i class="fab fa-linkedin fa-2x text-info mb-2"></i>
+                                                    <h6>LinkedIn</h6>
+                                                    <div class="form-check form-switch d-flex justify-content-center">
+                                                        <input class="form-check-input" type="checkbox" id="linkedin-integration">
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-primary mt-2">Configure</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="card border">
+                                                <div class="card-body text-center">
+                                                    <i class="fab fa-slack fa-2x text-success mb-2"></i>
+                                                    <h6>Slack</h6>
+                                                    <div class="form-check form-switch d-flex justify-content-center">
+                                                        <input class="form-check-input" type="checkbox" id="slack-integration">
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-primary mt-2">Configure</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Backup Configuration -->
+                        <div class="tab-pane fade" id="backup" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Backup Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Automatic Backup</label>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="auto-backup" checked>
+                                                <label class="form-check-label" for="auto-backup">
+                                                    Enable automatic backups
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Frequency</label>
+                                            <select class="form-select" id="backup-frequency">
+                                                <option value="daily" selected>Daily</option>
+                                                <option value="weekly">Weekly</option>
+                                                <option value="monthly">Monthly</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Backup Retention</label>
+                                            <input type="number" class="form-control" id="backup-retention" value="30" min="7" max="365">
+                                            <div class="form-text">Days backups will be kept</div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Last Backup</label>
+                                            <input type="text" class="form-control" value="2024-01-15 03:00 AM" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-primary" id="manual-backup">
+                                            <i class="fas fa-download me-1"></i> Create Manual Backup
+                                        </button>
+                                        <button class="btn btn-outline-secondary" id="restore-backup">
+                                            <i class="fas fa-upload me-1"></i> Restore Backup
+                                        </button>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <h6>Available Backups</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Size</th>
+                                                        <th>Status</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>2024-01-15 03:00</td>
+                                                        <td>142.5 MB</td>
+                                                        <td><span class="badge bg-success">Complete</span></td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-primary">Download</button>
+                                                            <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2024-01-14 03:00</td>
+                                                        <td>138.2 MB</td>
+                                                        <td><span class="badge bg-success">Complete</span></td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-primary">Download</button>
+                                                            <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { initializeGuards } from '../js/guards.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation and guards
+            initNavigation('configuracion', true);
+            initializeGuards('configuracion.html');
+
+            // Save configuration
+            document.getElementById('save-config').addEventListener('click', () => {
+                // Collect all form data
+                const config = {
+                    general: {
+                        systemName: document.getElementById('system-name').value,
+                        systemVersion: document.getElementById('system-version').value,
+                        defaultLanguage: document.getElementById('default-language').value,
+                        timezone: document.getElementById('timezone').value,
+                        companyDescription: document.getElementById('company-description').value,
+                        primaryColor: document.getElementById('primary-color').value
+                    },
+                    users: {
+                        autoRegistration: document.getElementById('auto-registration').checked,
+                        emailVerification: document.getElementById('email-verification').checked,
+                        defaultRole: document.getElementById('default-role').value,
+                        sessionTimeout: document.getElementById('session-timeout').value
+                    },
+                    // ... other sections
+                };
+
+                // Save to localStorage (in a real app, this would be sent to a server)
+                localStorage.setItem('systemConfig', JSON.stringify(config));
+                
+                // Show success message
+                alert('Configuration saved successfully');
+            });
+
+            // Reset configuration
+            document.getElementById('reset-config').addEventListener('click', () => {
+                if (confirm('Are you sure you want to reset all settings?')) {
+                    localStorage.removeItem('systemConfig');
+                    location.reload();
+                }
+            });
+
+            // Test email functionality
+            document.getElementById('test-email').addEventListener('click', () => {
+                const smtpServer = document.getElementById('smtp-server').value;
+                const smtpUser = document.getElementById('smtp-user').value;
+                
+                if (!smtpServer || !smtpUser) {
+                    alert('Please configure the SMTP server first');
+                    return;
+                }
+                
+                // Simulate sending test email
+                alert('Test email sent successfully');
+            });
+
+            // Manual backup
+            document.getElementById('manual-backup').addEventListener('click', () => {
+                // Simulate backup creation
+                const button = document.getElementById('manual-backup');
+                const originalText = button.innerHTML;
+                
+                button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Creating Backup...';
+                button.disabled = true;
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                    alert('Backup created successfully');
+                }, 3000);
+            });
+
+            // Load existing configuration
+            loadConfiguration();
+        });
+
+        function loadConfiguration() {
+            const savedConfig = localStorage.getItem('systemConfig');
+            if (savedConfig) {
+                const config = JSON.parse(savedConfig);
+                
+                // Populate form fields with saved values
+                if (config.general) {
+                    document.getElementById('system-name').value = config.general.systemName || 'Catalyst HR System';
+                    document.getElementById('default-language').value = config.general.defaultLanguage || 'es';
+                    // ... other fields
+                }
+                
+                if (config.users) {
+                    document.getElementById('auto-registration').checked = config.users.autoRegistration !== false;
+                    document.getElementById('email-verification').checked = config.users.emailVerification !== false;
+                    // ... other fields
+                }
+            }
+        }
+    </script>
+</body>
+</html>

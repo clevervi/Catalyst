@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile System Test - Catalyst</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .console-output {
+            background: #1e1e1e;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .test-result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h2 class="mb-0">🧪 Profile System Test Suite</h2>
+                        <p class="mb-0 text-muted">Comprehensive testing of the user profile system</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Test Controls</h5>
+                                <button id="runTests" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-play"></i> Run All Tests
+                                </button>
+                                <button id="clearOutput" class="btn btn-secondary ms-2">
+                                    <i class="fas fa-trash"></i> Clear Output
+                                </button>
+                                
+                                <div class="mt-4">
+                                    <h6>Individual Tests</h6>
+                                    <div class="btn-group-vertical d-grid gap-2">
+                                        <button class="btn btn-outline-primary btn-sm" onclick="testDatabaseInit()">Database Initialization</button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="testUserCreation()">User Creation</button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="testAuthentication()">Authentication</button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="testProfileUpdates()">Profile Updates</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Test Results</h5>
+                                <div id="testResults" class="test-result">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> Ready to run tests. Click "Run All Tests" to start.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h5>Console Output</h5>
+                            <div id="consoleOutput" class="console-output">
+                                Welcome to Profile System Testing!
+                                Click "Run All Tests" to begin comprehensive testing...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import runProfileSystemTests from './js/test-profile-system.js';
+        import { initDatabase } from './js/database.js';
+
+        // Capture console output
+        let originalConsoleLog = console.log;
+        let originalConsoleError = console.error;
+        let consoleOutput = document.getElementById('consoleOutput');
+        let testResults = document.getElementById('testResults');
+
+        function logToOutput(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const formattedMessage = `[${timestamp}] ${message}`;
+            consoleOutput.textContent += formattedMessage + '\n';
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            
+            // Call original console methods
+            if (type === 'error') {
+                originalConsoleError(message);
+            } else {
+                originalConsoleLog(message);
+            }
+        }
+
+        // Override console methods
+        console.log = (...args) => logToOutput(args.join(' '), 'log');
+        console.error = (...args) => logToOutput(args.join(' '), 'error');
+
+        // Test runner
+        document.getElementById('runTests').addEventListener('click', async () => {
+            const runButton = document.getElementById('runTests');
+            const originalText = runButton.innerHTML;
+            
+            try {
+                runButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running Tests...';
+                runButton.disabled = true;
+                
+                consoleOutput.textContent = 'Starting comprehensive profile system tests...\n';
+                
+                const success = await runProfileSystemTests();
+                
+                if (success) {
+                    testResults.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> All tests passed successfully!
+                        </div>
+                    `;
+                } else {
+                    testResults.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i> Some tests failed. Check console output for details.
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Test execution error:', error);
+                testResults.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-times-circle"></i> Test execution failed: ${error.message}
+                    </div>
+                `;
+            } finally {
+                runButton.innerHTML = originalText;
+                runButton.disabled = false;
+            }
+        });
+
+        // Clear output
+        document.getElementById('clearOutput').addEventListener('click', () => {
+            consoleOutput.textContent = 'Console cleared...\n';
+            testResults.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Output cleared. Ready to run tests.
+                </div>
+            `;
+        });
+
+        // Individual test functions
+        window.testDatabaseInit = async () => {
+            console.log('Testing database initialization...');
+            try {
+                await initDatabase();
+                console.log('✅ Database initialization successful');
+            } catch (error) {
+                console.error('❌ Database initialization failed:', error);
+            }
+        };
+
+        window.testUserCreation = () => {
+            console.log('Individual user creation test - see full test suite for comprehensive testing');
+        };
+
+        window.testAuthentication = () => {
+            console.log('Individual authentication test - see full test suite for comprehensive testing');
+        };
+
+        window.testProfileUpdates = () => {
+            console.log('Individual profile updates test - see full test suite for comprehensive testing');
+        };
+
+        // Make test function globally available
+        window.runProfileSystemTests = runProfileSystemTests;
+    </script>
+</body>
+</html>

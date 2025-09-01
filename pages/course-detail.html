@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details - Catalyst</title>
+    <meta name="description" content="Detailed information about the training course">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div id="navigation-container"></div>
+
+    <main class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body" id="course-details">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-3 text-muted">Loading course information...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mt-4" id="course-curriculum">
+                    </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <div class="h3 text-success mb-0" id="course-price">$0</div>
+                            <small class="text-muted">Course Price</small>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-lg" id="enroll-btn">
+                                <i class="fas fa-graduation-cap me-2"></i>Enroll Now
+                            </button>
+                            <button class="btn btn-outline-warning" id="save-course-btn">
+                                <i class="fas fa-bookmark me-2"></i>Save Course
+                            </button>
+                        </div>
+                        <hr>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="fw-bold" id="enrolled-count">0</div>
+                                <small class="text-muted">Enrolled</small>
+                            </div>
+                            <div class="col-6">
+                                <div class="fw-bold" id="rating-avg">0</div>
+                                <small class="text-muted">Rating</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Course Information</h6>
+                    </div>
+                    <div class="card-body" id="course-info">
+                        </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-user-tie me-2"></i>Instructor</h6>
+                    </div>
+                    <div class="card-body" id="instructor-info">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initializeRoleSystem } from '../js/role-management.js';
+        
+        // Initialize role system
+        initializeRoleSystem();
+
+        // Course data (would normally come from API)
+        const coursesData = {
+            1: {
+                id: 1,
+                title: "Advanced JavaScript for Developers",
+                category: "Programming",
+                level: "Intermediate",
+                duration: "8 weeks",
+                price: 450000,
+                instructor: {
+                    name: "Carlos Rodriguez",
+                    title: "Senior Full Stack Developer",
+                    experience: "8 years",
+                    courses: 12,
+                    rating: 4.8
+                },
+                description: `
+                    <p>Master modern JavaScript and the latest technologies in the ecosystem to become an expert developer.</p>
+                    <h6>What you'll learn:</h6>
+                    <ul>
+                        <li>ES6+ and modern JavaScript features</li>
+                        <li>Asynchronous programming and API handling</li>
+                        <li>React.js Framework from scratch</li>
+                        <li>Node.js and backend development</li>
+                        <li>Testing and application deployment</li>
+                    </ul>
+                `,
+                curriculum: [
+                    { module: 1, title: "ES6+ Fundamentals", duration: "1 week", lessons: 8 },
+                    { module: 2, title: "Asynchronous Programming", duration: "1 week", lessons: 6 },
+                    { module: 3, title: "React.js Fundamentals", duration: "2 weeks", lessons: 12 },
+                    { module: 4, title: "Node.js and Express", duration: "2 weeks", lessons: 10 },
+                    { module: 5, title: "APIs and Databases", duration: "1 week", lessons: 7 },
+                    { module: 6, title: "Testing and Deployment", duration: "1 week", lessons: 5 }
+                ],
+                requirements: [
+                    "Basic knowledge of HTML, CSS, and JavaScript",
+                    "Previous programming experience (minimum 6 months)",
+                    "Computer with stable internet access"
+                ],
+                includes: [
+                    "48 HD videos with detailed explanations",
+                    "Step-by-step practical projects",
+                    "Source code for all projects",
+                    "Certificate of completion",
+                    "Lifetime access to content",
+                    "Direct instructor support"
+                ],
+                enrolled: 289,
+                rating: 4.7,
+                startDate: "2025-09-15",
+                modality: "Online"
+            },
+            2: {
+                id: 2,
+                title: "Data Science with Python",
+                category: "Data Science",
+                level: "Intermediate",
+                duration: "10 weeks",
+                price: 680000,
+                instructor: {
+                    name: "Ana García",
+                    title: "Senior Data Scientist",
+                    experience: "6 years",
+                    courses: 8,
+                    rating: 4.9
+                },
+                description: `
+                    <p>Learn Data Science from scratch using Python and become a professional data analyst.</p>
+                    <h6>What you'll learn:</h6>
+                    <ul>
+                        <li>Python for data analysis (Pandas, NumPy)</li>
+                        <li>Data visualization (Matplotlib, Seaborn)</li>
+                        <li>Machine Learning with scikit-learn</li>
+                        <li>Applied statistics and probability</li>
+                        <li>Real-world data analysis projects</li>
+                    </ul>
+                `,
+                curriculum: [
+                    { module: 1, title: "Introduction to Python", duration: "1 week", lessons: 10 },
+                    { module: 2, title: "Pandas and NumPy", duration: "2 weeks", lessons: 14 },
+                    { module: 3, title: "Data Visualization", duration: "1.5 weeks", lessons: 8 },
+                    { module: 4, title: "Descriptive Statistics", duration: "1.5 weeks", lessons: 9 },
+                    { module: 5, title: "Basic Machine Learning", duration: "2 weeks", lessons: 12 },
+                    { module: 6, title: "Final Project", duration: "2 weeks", lessons: 6 }
+                ],
+                requirements: [
+                    "Basic knowledge of mathematics",
+                    "Curiosity for data analysis",
+                    "No prior programming experience required"
+                ],
+                includes: [
+                    "60+ high-quality videos",
+                    "Real datasets for practice",
+                    "Jupyter notebooks included",
+                    "Professional certificate",
+                    "Personalized mentorship",
+                    "Exclusive student community"
+                ],
+                enrolled: 156,
+                rating: 4.9,
+                startDate: "2025-09-20",
+                modality: "Online"
+            }
+        };
+
+        // Get course ID from URL
+        function getCourseId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id') || '1';
+        }
+
+        // Load course details
+        function loadCourseDetails() {
+            const courseId = getCourseId();
+            const course = coursesData[courseId];
+            
+            if (!course) {
+                document.getElementById('course-details').innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                        <h4>Course Not Found</h4>
+                        <p class="text-muted">The course you're looking for doesn't exist or has been removed.</p>
+                        <a href="capacitaciones.html" class="btn btn-primary">View All Courses</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Update page title
+            document.title = `${course.title} | Catalyst`;
+
+            // Load course details
+            document.getElementById('course-details').innerHTML = `
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div>
+                        <h1 class="h2 mb-2">${course.title}</h1>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="badge bg-primary">${course.category}</span>
+                            <span class="badge bg-success">${course.level}</span>
+                            <span class="badge bg-info">${course.modality}</span>
+                        </div>
+                        <div class="text-muted">
+                            <i class="fas fa-clock me-1"></i>${course.duration}
+                            <span class="mx-2">•</span>
+                            <i class="fas fa-calendar me-1"></i>Starts: ${formatDate(course.startDate)}
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="d-flex align-items-center mb-2">
+                            ${generateStars(course.rating)}
+                            <span class="ms-2 text-muted">(${course.rating})</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h5><i class="fas fa-info-circle me-2"></i>Course Description</h5>
+                    <div class="course-description">${course.description}</div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <h5><i class="fas fa-check-circle me-2"></i>Requirements</h5>
+                        <ul class="list-unstyled">
+                            ${course.requirements.map(req => `
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>${req}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <h5><i class="fas fa-gift me-2"></i>Includes</h5>
+                        <ul class="list-unstyled">
+                            ${course.includes.map(item => `
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-primary me-2"></i>${item}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // Load curriculum
+            document.getElementById('course-curriculum').innerHTML = `
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Course Content</h5>
+                </div>
+                <div class="card-body">
+                    <div class="curriculum-list">
+                        ${course.curriculum.map(module => `
+                            <div class="curriculum-module mb-3">
+                                <div class="d-flex justify-content-between align-items-center p-3 border rounded">
+                                    <div>
+                                        <h6 class="mb-1">Module ${module.module}: ${module.title}</h6>
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>${module.duration}
+                                            <span class="mx-2">•</span>
+                                            <i class="fas fa-play-circle me-1"></i>${module.lessons} lessons
+                                        </small>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Update sidebar info
+            document.getElementById('course-price').textContent = `$${course.price.toLocaleString()} COP`;
+            document.getElementById('enrolled-count').textContent = course.enrolled;
+            document.getElementById('rating-avg').textContent = course.rating;
+
+            // Load course info
+            document.getElementById('course-info').innerHTML = `
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span><i class="fas fa-signal me-2"></i>Level:</span>
+                        <strong>${course.level}</strong>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span><i class="fas fa-clock me-2"></i>Duration:</span>
+                        <strong>${course.duration}</strong>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span><i class="fas fa-laptop me-2"></i>Modality:</span>
+                        <strong>${course.modality}</strong>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span><i class="fas fa-calendar me-2"></i>Start Date:</span>
+                        <strong>${formatDate(course.startDate)}</strong>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span><i class="fas fa-certificate me-2"></i>Certificate:</span>
+                        <strong>Included</strong>
+                    </div>
+                </div>
+            `;
+
+            // Load instructor info
+            document.getElementById('instructor-info').innerHTML = `
+                <div class="d-flex align-items-center mb-3">
+                    <img src="../img/default-avatar.svg" alt="${course.instructor.name}" 
+                         class="rounded-circle me-3" style="width: 60px; height: 60px;">
+                    <div>
+                        <h6 class="mb-0">${course.instructor.name}</h6>
+                        <small class="text-muted">${course.instructor.title}</small>
+                    </div>
+                </div>
+                <div class="row text-center mb-3">
+                    <div class="col-4">
+                        <div class="fw-bold">${course.instructor.experience}</div>
+                        <small class="text-muted">Experience</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold">${course.instructor.courses}</div>
+                        <small class="text-muted">Courses</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold">${course.instructor.rating}</div>
+                        <small class="text-muted">Rating</small>
+                    </div>
+                </div>
+                <button class="btn btn-outline-primary btn-sm w-100">
+                    <i class="fas fa-envelope me-2"></i>Contact Instructor
+                </button>
+            `;
+        }
+
+        function generateStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            
+            let starsHTML = '';
+            
+            // Full stars
+            for (let i = 0; i < fullStars; i++) {
+                starsHTML += '<i class="fas fa-star text-warning"></i>';
+            }
+            
+            // Half star
+            if (hasHalfStar) {
+                starsHTML += '<i class="fas fa-star-half-alt text-warning"></i>';
+            }
+            
+            // Empty stars
+            for (let i = 0; i < emptyStars; i++) {
+                starsHTML += '<i class="far fa-star text-warning"></i>';
+            }
+            
+            return starsHTML;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Event handlers
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCourseDetails();
+
+            // Enroll button
+            document.getElementById('enroll-btn').addEventListener('click', () => {
+                const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+                
+                if (!isAuthenticated) {
+                    if (confirm('You need to log in to enroll. Do you want to go to the login page?')) {
+                        window.location.href = 'login.html';
+                    }
+                } else {
+                    if (confirm('Do you confirm your enrollment in this course?')) {
+                        alert('Enrollment successful! Check your email for more details.');
+                        // Update enrolled count
+                        const currentCount = parseInt(document.getElementById('enrolled-count').textContent);
+                        document.getElementById('enrolled-count').textContent = currentCount + 1;
+                    }
+                }
+            });
+
+            // Save course button
+            document.getElementById('save-course-btn').addEventListener('click', () => {
+                const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+                
+                if (!isAuthenticated) {
+                    if (confirm('You need to log in to save courses. Do you want to go to the login page?')) {
+                        window.location.href = 'login.html';
+                    }
+                } else {
+                    const btn = document.getElementById('save-course-btn');
+                    const isSaved = btn.classList.contains('btn-warning');
+                    
+                    if (isSaved) {
+                        btn.classList.remove('btn-warning');
+                        btn.classList.add('btn-outline-warning');
+                        btn.innerHTML = '<i class="fas fa-bookmark me-2"></i>Save Course';
+                        alert('Course removed from saved');
+                    } else {
+                        btn.classList.remove('btn-outline-warning');
+                        btn.classList.add('btn-warning');
+                        btn.innerHTML = '<i class="fas fa-bookmark me-2"></i>Saved';
+                        alert('Course saved successfully');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

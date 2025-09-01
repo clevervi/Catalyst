@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Role System - Catalyst HR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navigation will be inserted by role management -->
+    <div id="navigation-container"></div>
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center mb-5">
+                    <h1 class="display-4">🔐 Sistema de Roles - Catalyst HR</h1>
+                    <p class="lead">Prueba el sistema de roles y navegación dinámica</p>
+                </div>
+
+                <!-- Current User Info -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i> Usuario Actual</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="current-user-info">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role Testing Section -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-users-cog me-2"></i> Pruebas de Roles</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Inicia sesión con diferentes roles para ver cómo cambia la navegación y el acceso:</p>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card border-danger">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-crown fa-2x text-danger mb-2"></i>
+                                        <h6>Administrador</h6>
+                                        <small class="text-muted">admin@catalyst.com</small><br>
+                                        <small class="text-muted">demo123</small>
+                                        <button class="btn btn-sm btn-danger mt-2 login-as" 
+                                                data-email="admin@catalyst.com" 
+                                                data-password="demo123">
+                                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card border-success">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-users fa-2x text-success mb-2"></i>
+                                        <h6>HR Manager</h6>
+                                        <small class="text-muted">hr@catalyst.com</small><br>
+                                        <small class="text-muted">demo123</small>
+                                        <button class="btn btn-sm btn-success mt-2 login-as" 
+                                                data-email="hr@catalyst.com" 
+                                                data-password="demo123">
+                                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card border-info">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-search fa-2x text-info mb-2"></i>
+                                        <h6>Reclutador</h6>
+                                        <small class="text-muted">recruiter@catalyst.com</small><br>
+                                        <small class="text-muted">demo123</small>
+                                        <button class="btn btn-sm btn-info mt-2 login-as" 
+                                                data-email="recruiter@catalyst.com" 
+                                                data-password="demo123">
+                                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card border-warning">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-user-tie fa-2x text-warning mb-2"></i>
+                                        <h6>Hiring Manager</h6>
+                                        <small class="text-muted">manager@catalyst.com</small><br>
+                                        <small class="text-muted">demo123</small>
+                                        <button class="btn btn-sm btn-warning mt-2 login-as" 
+                                                data-email="manager@catalyst.com" 
+                                                data-password="demo123">
+                                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button class="btn btn-outline-secondary" onclick="UserManager.logout()">
+                                <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Access Tests -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-lock me-2"></i> Pruebas de Acceso por Rol</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Los siguientes enlaces están protegidos por roles. Prueba acceder con diferentes usuarios:</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-danger"><i class="fas fa-crown me-1"></i> Solo Administrador:</h6>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <a href="pages/admin-dashboard.html" target="_blank">
+                                            <i class="fas fa-tachometer-alt me-1"></i> Panel de Administración
+                                        </a>
+                                        <span class="badge bg-danger ms-2">Admin</span>
+                                    </li>
+                                </ul>
+
+                                <h6 class="text-success mt-3"><i class="fas fa-users me-1"></i> HR Manager + Admin:</h6>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <a href="pages/reports.html" target="_blank">
+                                            <i class="fas fa-chart-pie me-1"></i> Reportes y Analytics
+                                        </a>
+                                        <span class="badge bg-success ms-2">HR Mgr</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="pages/user-management.html" target="_blank">
+                                            <i class="fas fa-users-cog me-1"></i> Gestión de Usuarios
+                                        </a>
+                                        <span class="badge bg-success ms-2">HR Mgr</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="pages/hiring-dashboard.html" target="_blank">
+                                            <i class="fas fa-chart-line me-1"></i> Dashboard de Contratación
+                                        </a>
+                                        <span class="badge bg-success ms-2">HR Mgr</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h6 class="text-info"><i class="fas fa-search me-1"></i> Reclutador + Superiores:</h6>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <a href="pages/resume-database.html" target="_blank">
+                                            <i class="fas fa-file-alt me-1"></i> Base de Datos CV
+                                        </a>
+                                        <span class="badge bg-info ms-2">Recruiter</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="pages/kanban.html" target="_blank">
+                                            <i class="fas fa-columns me-1"></i> Pipeline Candidatos
+                                        </a>
+                                        <span class="badge bg-info ms-2">Recruiter</span>
+                                    </li>
+                                </ul>
+
+                                <h6 class="text-warning mt-3"><i class="fas fa-user-tie me-1"></i> Hiring Manager + Superiores:</h6>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <a href="pages/job-management.html" target="_blank">
+                                            <i class="fas fa-briefcase me-1"></i> Gestión de Empleos
+                                        </a>
+                                        <span class="badge bg-warning ms-2">Hiring Mgr</span>
+                                    </li>
+                                </ul>
+
+                                <h6 class="text-secondary mt-3"><i class="fas fa-globe me-1"></i> Acceso Público:</h6>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <a href="index.html" target="_blank">
+                                            <i class="fas fa-home me-1"></i> Página Principal
+                                        </a>
+                                        <span class="badge bg-secondary ms-2">Público</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="pages/empleos.html" target="_blank">
+                                            <i class="fas fa-briefcase me-1"></i> Portal de Empleos
+                                        </a>
+                                        <span class="badge bg-secondary ms-2">Público</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role Features Test -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-cogs me-2"></i> Características del Sistema de Roles</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-check-circle text-success me-1"></i> Funcionalidades Implementadas:</h6>
+                                <ul>
+                                    <li>✅ Navegación dinámica por rol</li>
+                                    <li>✅ Control de acceso a páginas</li>
+                                    <li>✅ Elementos UI basados en permisos</li>
+                                    <li>✅ Indicadores de rol visual</li>
+                                    <li>✅ Logout automático</li>
+                                    <li>✅ Redirección por rol al login</li>
+                                    <li>✅ Página de acceso denegado</li>
+                                    <li>✅ Persistencia de sesión</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-users text-primary me-1"></i> Jerarquía de Roles:</h6>
+                                <ol>
+                                    <li><strong>Administrador</strong> - Acceso completo</li>
+                                    <li><strong>HR Manager</strong> - Gestión de RRHH</li>
+                                    <li><strong>Reclutador</strong> - Gestión de candidatos</li>
+                                    <li><strong>Hiring Manager</strong> - Gestión de empleos</li>
+                                    <li><strong>Empleado</strong> - Acceso limitado</li>
+                                    <li><strong>Candidato</strong> - Solo portal público</li>
+                                </ol>
+
+                                <div class="mt-3">
+                                    <h6><i class="fas fa-shield-alt text-info me-1"></i> Elementos Protegidos:</h6>
+                                    <div class="mb-2">
+                                        <button class="btn btn-sm btn-danger" data-admin-only="true">
+                                            Solo Admin <i class="fas fa-crown"></i>
+                                        </button>
+                                    </div>
+                                    <div class="mb-2">
+                                        <button class="btn btn-sm btn-success" data-role="hr_manager,administrador">
+                                            HR Manager+ <i class="fas fa-users"></i>
+                                        </button>
+                                    </div>
+                                    <div class="mb-2">
+                                        <button class="btn btn-sm btn-info" data-role="reclutador,hr_manager,administrador">
+                                            Reclutador+ <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Display -->
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-info-circle me-2"></i> Estado del Sistema</h6>
+                    <div id="system-status">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Role Management System -->
+    <script type="module">
+        import { initializeRoleSystem, UserManager, UIManager } from './js/role-management.js';
+        
+        // Initialize role system
+        initializeRoleSystem();
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCurrentUserInfo();
+            updateSystemStatus();
+            
+            // Add event listeners for login buttons
+            document.querySelectorAll('.login-as').forEach(button => {
+                button.addEventListener('click', function() {
+                    const email = this.dataset.email;
+                    const password = this.dataset.password;
+                    
+                    // Show loading
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        const result = UserManager.login(email, password);
+                        
+                        if (result.success) {
+                            // Reload page to see changes
+                            window.location.reload();
+                        } else {
+                            alert('Error al iniciar sesión: ' + result.message);
+                            this.innerHTML = originalText;
+                            this.disabled = false;
+                        }
+                    }, 500);
+                });
+            });
+            
+            // Update role-based visibility
+            updateRoleBasedElements();
+            
+            console.log('✅ Role system test page initialized');
+        });
+        
+        function updateCurrentUserInfo() {
+            const container = document.getElementById('current-user-info');
+            
+            if (UserManager.isAuthenticated()) {
+                const userData = UserManager.getUserData();
+                container.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="${userData.avatar || '/img/default-avatar.png'}" 
+                                     alt="Avatar" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <h6 class="mb-1">${userData.name}</h6>
+                                    <small class="text-muted">${userData.email}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-md-end">
+                                <span class="badge bg-primary fs-6">${UIManager.getRoleLabel(userData.role)}</span><br>
+                                <small class="text-muted">${userData.department}</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="text-center text-muted">
+                        <i class="fas fa-user-slash fa-2x mb-2"></i>
+                        <p>No hay usuario autenticado</p>
+                        <a href="pages/login.html" class="btn btn-primary btn-sm">
+                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
+                        </a>
+                    </div>
+                `;
+            }
+        }
+        
+        function updateSystemStatus() {
+            const container = document.getElementById('system-status');
+            const isAuth = UserManager.isAuthenticated();
+            const userData = UserManager.getUserData();
+            
+            container.innerHTML = `
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Estado de Autenticación:</strong><br>
+                        <span class="badge ${isAuth ? 'bg-success' : 'bg-danger'}">
+                            ${isAuth ? 'Autenticado' : 'No autenticado'}
+                        </span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Rol Actual:</strong><br>
+                        <span class="badge bg-info">
+                            ${userData.role ? UIManager.getRoleLabel(userData.role) : 'Sin rol'}
+                        </span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Departamento:</strong><br>
+                        <span class="badge bg-secondary">
+                            ${userData.department || 'Sin departamento'}
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function updateRoleBasedElements() {
+            // Hide elements based on roles using data attributes
+            const roleElements = document.querySelectorAll('[data-role]');
+            roleElements.forEach(element => {
+                const allowedRoles = element.dataset.role.split(',');
+                const userData = UserManager.getUserData();
+                if (!allowedRoles.includes(userData.role) && !allowedRoles.includes('*')) {
+                    element.style.display = 'none';
+                }
+            });
+            
+            // Show admin-only elements for administrators
+            const adminElements = document.querySelectorAll('[data-admin-only]');
+            adminElements.forEach(element => {
+                const userData = UserManager.getUserData();
+                if (userData.role !== 'administrador') {
+                    element.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

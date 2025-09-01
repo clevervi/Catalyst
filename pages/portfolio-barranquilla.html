@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Bank | Barranquilla Branch</title>
+    <meta name="description" content="Professional portfolio bank - Barranquilla Branch">
+    
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../img/image.png">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS Framework and Styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    
+    <!-- Custom styles matching reference page -->
+    <style>
+        /* Main header styling */
+        .header__container {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 60px 0 40px;
+            text-align: center;
+            margin-top: 76px;
+        }
+        
+        .header__title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Clan list grid styling */
+        .clan-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Clan card styling */
+        .clan-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+        
+        .clan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .clan-card__link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            padding: 2rem;
+            text-align: center;
+            height: 100%;
+        }
+        
+        .clan-card__img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: block;
+            object-fit: cover;
+            border: 3px solid #007bff;
+        }
+        
+        .clan-card__name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+            transition: color 0.3s ease;
+        }
+        
+        .clan-card:hover .clan-card__name {
+            color: #007bff;
+        }
+        
+        /* Back button styling */
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .back-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .clan-list {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+                padding: 2rem 1rem;
+            }
+            
+            .header__title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation will be loaded dynamically -->
+
+    <!-- Header Container matching reference -->
+    <div class="header__container">
+    <h1 class="header__title">Portfolio Bank - Barranquilla Branch</h1>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <section class="clan-list" id="clan-list">
+            <!-- Clan cards will be loaded dynamically -->
+        </section>
+    </main>
+
+    <!-- Back to Clanes Button -->
+    <a href="clanes.html" class="btn btn-primary back-button" data-bs-toggle="tooltip" data-bs-placement="left" title="Back to Branches">
+        <i class="fas fa-arrow-left fa-lg"></i>
+    </a>
+
+    <!-- Footer will be loaded dynamically -->
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module">
+        // Initialize navigation and authentication UI
+        import { initNavigation } from '../js/navigation.js';
+        import { updateAuthUI } from '../js/roles.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation with current page
+            initNavigation('clanes', true);
+            
+            // Update authentication UI
+            updateAuthUI();
+            
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Initialize portfolio page
+            initializePortfolioPage();
+        });
+        
+        // Portfolio page functionality matching reference structure
+        function initializePortfolioPage() {
+            // Clan data matching reference page structure
+            const clans = [
+                {
+                    id: 1,
+                    name: "Developers",
+                    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=150&h=150&fit=crop",
+                    link: "#" // In a real app, this would link to individual clan pages
+                },
+                {
+                    id: 2,
+                    name: "Designers",
+                    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=150&h=150&fit=crop",
+                    link: "#"
+                },
+                {
+                    id: 3,
+                    name: "Analysts",
+                    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=150&h=150&fit=crop",
+                    link: "#"
+                },
+                {
+                    id: 4,
+                    name: "Project Managers",
+                    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=150&h=150&fit=crop",
+                    link: "#"
+                },
+                {
+                    id: 5,
+                    name: "DevOps",
+                    image: "https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?w=150&h=150&fit=crop",
+                    link: "#"
+                },
+                {
+                    id: 6,
+                    name: "QA Testers",
+                    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=150&h=150&fit=crop",
+                    link: "#"
+                }
+            ];
+            
+            // Render clan grid
+            renderClanGrid(clans);
+        }
+        
+        // Simple clan grid rendering function matching reference page
+        function renderClanGrid(clans) {
+            const container = document.getElementById('clan-list');
+            
+            container.innerHTML = clans.map(clan => `
+                <article class="clan-card">
+                    <a class="clan-card__link" href="${clan.link}" onclick="showClanMessage('${clan.name}'); return false;">
+                        <img class="clan-card__img" src="${clan.image}" alt="${clan.name}" />
+                        <h2 class="clan-card__name">${clan.name}</h2>
+                    </a>
+                </article>
+            `).join('');
+        }
+        
+        // Show message when clan is clicked (placeholder functionality)
+        function showClanMessage(clanName) {
+            alert(`The portfolios for the ${clanName} clan will be available soon.\n\nIn the full version, this page would display all members of the ${clanName} clan and their individual portfolios.`);
+        }
+        
+        // Make function global for onclick handlers
+        window.showClanMessage = showClanMessage;
+    </script>
+</body>
+</html>

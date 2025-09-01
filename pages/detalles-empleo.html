@@ -1,0 +1,435 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Frontend Developer - Catalyst HR System</title>
+    
+    <!-- CSS Framework and Styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Navigation will be inserted here -->
+    
+    <main class="main-content">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="empleos.html">Jobs</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">React Frontend Developer</li>
+                </ol>
+            </nav>
+            
+            <!-- Coming Soon Notice -->
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-star me-3 fa-lg"></i>
+                    <div>
+                        <h6 class="alert-heading mb-1">Enhanced Job Details Coming Soon!</h6>
+                        <p class="mb-0">We're adding new features to provide you with more detailed job information and better application tools.</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <div class="row">
+                <!-- Main Content -->
+                <div class="col-lg-8 mb-4">
+                    <!-- Job Header -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-2 text-center mb-3 mb-md-0">
+                                    <img src="../img/reactjs-inner.svg" alt="Tech Solutions Inc." class="company-logo" style="width: 80px; height: 80px; object-fit: contain;">
+                                </div>
+                                <div class="col-md-7">
+                                    <h1 class="h3 job-title mb-2">React Frontend Developer</h1>
+                                    <h5 class="company-name text-primary mb-3">Tech Solutions Inc.</h5>
+                                    
+                                    <div class="job-meta mb-3">
+                                        <span class="badge bg-success me-2">
+                                            <i class="fas fa-map-marker-alt me-1"></i>Remote
+                                        </span>
+                                        <span class="badge bg-primary me-2">
+                                            <i class="fas fa-clock me-1"></i>Full Time
+                                        </span>
+                                        <span class="badge bg-warning text-dark me-2">
+                                            <i class="fas fa-star me-1"></i>Senior
+                                        </span>
+                                        <span class="badge bg-info">
+                                            <i class="fas fa-dollar-sign me-1"></i>$3.5M - $4.5M
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="d-flex align-items-center text-muted small">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        <span class="me-3">Posted 2 days ago</span>
+                                        <i class="fas fa-users me-1"></i>
+                                        <span>24 applications</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-accent btn-lg" id="apply-btn">
+                                            <i class="fas fa-paper-plane me-2"></i>Apply Now
+                                        </button>
+                                        <button class="btn btn-outline-primary" id="save-btn">
+                                            <i class="fas fa-heart me-2"></i>Save
+                                        </button>
+                                        <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="dropdown">
+                                            <i class="fas fa-share me-2"></i>Share
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#"><i class="fab fa-linkedin me-2"></i>LinkedIn</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="fab fa-twitter me-2"></i>Twitter</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="fas fa-copy me-2"></i>Copy link</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Job Description -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header">
+                            <h4 class="mb-0">Job Description</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">We are looking for an experienced React Frontend Developer to join our technology innovation team.</p>
+                            
+                            <p>At Tech Solutions Inc., we are transforming how companies interact with technology. As part of our team, you will work on challenging projects that impact thousands of users around the world.</p>
+                            
+                            <h5 class="mt-4 mb-3">Main Responsibilities:</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Develop modern web applications with React and TypeScript</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Collaborate with UX/UI designers to implement intuitive interfaces</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Optimize frontend application performance</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Maintain clean and well-documented code</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Participate in code reviews and CI/CD processes</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Requirements -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header">
+                            <h4 class="mb-0">Requirements</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">Mandatory Requirements</h6>
+                                    <ul class="requirements-list">
+                                        <li><i class="fas fa-star text-warning me-2"></i>3+ years of experience with React</li>
+                                        <li><i class="fas fa-star text-warning me-2"></i>Solid knowledge of JavaScript ES6+</li>
+                                        <li><i class="fas fa-star text-warning me-2"></i>Experience with TypeScript</li>
+                                        <li><i class="fas fa-star text-warning me-2"></i>Experience with Redux or Context API</li>
+                                        <li><i class="fas fa-star text-warning me-2"></i>HTML5, CSS3 and SASS/SCSS</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-success mb-3">Desirable</h6>
+                                    <ul class="requirements-list">
+                                        <li><i class="fas fa-plus text-success me-2"></i>Experience with Next.js</li>
+                                        <li><i class="fas fa-plus text-success me-2"></i>Knowledge of testing (Jest, RTL)</li>
+                                        <li><i class="fas fa-plus text-success me-2"></i>Experience with GraphQL</li>
+                                        <li><i class="fas fa-plus text-success me-2"></i>UX/UI knowledge</li>
+                                        <li><i class="fas fa-plus text-success me-2"></i>Intermediate-Advanced English</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Benefits -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header">
+                            <h4 class="mb-0">Benefits</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-home text-success me-3 fa-lg"></i>
+                                        <div>
+                                            <h6 class="mb-0">Remote Work</h6>
+                                            <small class="text-muted">100% remote from anywhere</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-clock text-primary me-3 fa-lg"></i>
+                                        <div>
+                                            <h6 class="mb-0">Flexible Hours</h6>
+                                            <small class="text-muted">Organize your work time</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-graduation-cap text-info me-3 fa-lg"></i>
+                                        <div>
+                                            <h6 class="mb-0">Training</h6>
+                                            <small class="text-muted">Paid courses and conferences</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-medkit text-danger me-3 fa-lg"></i>
+                                        <div>
+                                            <h6 class="mb-0">Health Insurance</h6>
+                                            <small class="text-muted">Full coverage for you and family</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Company Info -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">About Tech Solutions Inc.</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="company-stats">
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted">Industry:</span>
+                                    <strong>Technology</strong>
+                                </div>
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted">Size:</span>
+                                    <strong>201-500 employees</strong>
+                                </div>
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted">Founded:</span>
+                                    <strong>2015</strong>
+                                </div>
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted">Location:</span>
+                                    <strong>Bogotá, Colombia</strong>
+                                </div>
+                                <div class="d-flex justify-content-between py-2">
+                                    <span class="text-muted">Website:</span>
+                                    <a href="#" class="text-decoration-none">techsolutions.co</a>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <p class="small text-muted">Leading company in developing innovative technological solutions for the Latin American market.</p>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <a href="empresas.html" class="btn btn-outline-primary btn-sm">
+                                    View more jobs from this company
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Similar Jobs -->
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0">Similar Jobs</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="similar-job-item p-3 border-bottom">
+                                <h6 class="mb-1">
+                                    <a href="#" class="text-decoration-none">Backend Developer Node.js</a>
+                                </h6>
+                                <p class="text-muted small mb-1">Innovatech</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-warning text-dark">Hybrid</span>
+                                    <small class="text-muted">$4M - $5M</small>
+                                </div>
+                            </div>
+                            
+                            <div class="similar-job-item p-3 border-bottom">
+                                <h6 class="mb-1">
+                                    <a href="#" class="text-decoration-none">Full Stack Developer</a>
+                                </h6>
+                                <p class="text-muted small mb-1">Digital Creative</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-success">Remote</span>
+                                    <small class="text-muted">$3M - $4.2M</small>
+                                </div>
+                            </div>
+                            
+                            <div class="similar-job-item p-3">
+                                <h6 class="mb-1">
+                                    <a href="#" class="text-decoration-none">React Native Developer</a>
+                                </h6>
+                                <p class="text-muted small mb-1">Mobile Solutions</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-info">On-site</span>
+                                    <small class="text-muted">$3.8M - $4.8M</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Application Modal -->
+    <div class="modal fade" id="applicationModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-paper-plane me-2"></i>Apply for this job
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>React Frontend Developer</strong> at <strong>Tech Solutions Inc.</strong>
+                    </div>
+                    
+                    <form id="applicationForm">
+                        <div class="mb-3">
+                            <label class="form-label">CV / Resume *</label>
+                            <div class="border-2 border-dashed p-4 text-center" style="border-color: var(--primary-light);">
+                                <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-2"></i>
+                                <p class="mb-2">Drag your CV here or <button type="button" class="btn btn-link p-0">select a file</button></p>
+                                <small class="text-muted">Accepted formats: PDF, DOC, DOCX (max. 5MB)</small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Cover letter (optional)</label>
+                            <textarea class="form-control" rows="4" placeholder="Tell us why you are the ideal candidate for this position..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Salary expectation</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" placeholder="e.g.: 4,000,000">
+                                <span class="input-group-text">COP/month</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">When can you start?</label>
+                            <select class="form-select">
+                                <option>Immediately</option>
+                                <option>In 2 weeks</option>
+                                <option>In 1 month</option>
+                                <option>In 2 months</option>
+                                <option>To be agreed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="acceptTerms" required>
+                            <label class="form-check-label" for="acceptTerms">
+                                I accept the <a href="terminos.html">terms and conditions</a> and authorize the processing of my personal data
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="applicationForm" class="btn btn-accent">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Application
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer will be inserted here -->
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { updateAuthUI } from '../js/auth.js';
+        import { getCurrentUser } from '../js/guards.js';
+        import { showToast } from '../js/ui.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation
+            initNavigation('detalles-empleo', true);
+            updateAuthUI();
+            
+            const user = getCurrentUser();
+            
+            // Apply button functionality
+            document.getElementById('apply-btn').addEventListener('click', () => {
+                if (!user) {
+                    showToast('You must log in to apply', 'warning');
+                    setTimeout(() => {
+                        window.location.href = 'login.html?returnUrl=' + encodeURIComponent(window.location.href);
+                    }, 1000);
+                    return;
+                }
+                
+                const modal = new bootstrap.Modal(document.getElementById('applicationModal'));
+                modal.show();
+            });
+            
+            // Save button functionality
+            document.getElementById('save-btn').addEventListener('click', () => {
+                if (!user) {
+                    showToast('You must log in to save jobs', 'warning');
+                    return;
+                }
+                
+                const btn = document.getElementById('save-btn');
+                const icon = btn.querySelector('i');
+                
+                if (icon.classList.contains('fas')) {
+                    // Already saved - remove from favorites
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-outline-primary');
+                    showToast('Job removed from favorites');
+                } else {
+                    // Add to favorites
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    btn.classList.remove('btn-outline-primary');
+                    btn.classList.add('btn-primary');
+                    showToast('Job saved to favorites');
+                }
+            });
+            
+            // Application form submission
+            document.getElementById('applicationForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Simulate application submission
+                showToast('Your application has been submitted successfully!', 'success');
+                
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('applicationModal'));
+                    modal.hide();
+                    
+                    // Update apply button
+                    const applyBtn = document.getElementById('apply-btn');
+                    applyBtn.innerHTML = '<i class="fas fa-check me-2"></i>Applied';
+                    applyBtn.classList.remove('btn-accent');
+                    applyBtn.classList.add('btn-success');
+                    applyBtn.disabled = true;
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details - Catalyst</title>
+    <meta name="description" content="Detailed job information">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Navigation will be loaded dynamically -->
+    <div id="navigation-container"></div>
+
+    <main class="container py-5">
+        <div class="row">
+            <!-- Main Job Details -->
+            <div class="col-lg-8 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body" id="job-details">
+                        <!-- Job details will be loaded here -->
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-3 text-muted">Loading job information...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company Information -->
+                <div class="card shadow-sm mt-4" id="company-info">
+                    <!-- Company info will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Quick Apply Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">
+                            <i class="fas fa-paper-plane me-2"></i>Apply for this job
+                        </h5>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-lg" id="apply-btn">
+                                <i class="fas fa-send me-2"></i>Apply Now
+                            </button>
+                            <button class="btn btn-outline-danger" id="save-btn">
+                                <i class="fas fa-heart me-2"></i>Save Job
+                            </button>
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-users me-1"></i>
+                                <span id="applicants-count">0</span> people have applied
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Stats -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Job Statistics</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 mb-3">
+                                <div class="fw-bold text-primary" id="views-count">0</div>
+                                <small class="text-muted">Views</small>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="fw-bold text-success" id="applications-count">0</div>
+                                <small class="text-muted">Applications</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Similar Jobs -->
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Similar Jobs</h6>
+                    </div>
+                    <div class="card-body" id="similar-jobs">
+                        <!-- Similar jobs will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initializeRoleSystem } from '../js/role-management.js';
+        
+        // Initialize role system
+        initializeRoleSystem();
+
+        // Job data (would normally come from API)
+        const jobsData = {
+            1: {
+                id: 1,
+                title: "Senior Full Stack Developer",
+                company: "TechCorp Colombia",
+                location: "Bogotá, Colombia",
+                type: "Full Time",
+                modality: "Hybrid",
+                salary: "$4,500,000 - $6,500,000 COP",
+                experience: "3-5 years",
+                description: `
+                    <p>We are looking for a Senior Full Stack Developer to join our innovative product development team.</p>
+                    <h6>Responsibilities:</h6>
+                    <ul>
+                        <li>Develop complete web applications using React, Node.js, and PostgreSQL</li>
+                        <li>Collaborate with multidisciplinary teams to deliver high-quality solutions</li>
+                        <li>Participate in code reviews and mentor junior developers</li>
+                        <li>Optimize applications for maximum performance and scalability</li>
+                    </ul>
+                `,
+                requirements: [
+                    "Minimum 3 years of experience in Full Stack development",
+                    "Strong experience with React.js and Node.js",
+                    "Knowledge of SQL databases (PostgreSQL preferred)",
+                    "Experience with Git and agile methodologies",
+                    "Conversational English"
+                ],
+                benefits: [
+                    "Competitive salary",
+                    "Medical and dental insurance",
+                    "Hybrid work (3 days in office, 2 remote)",
+                    "15 vacation days + personal days",
+                    "Annual training budget"
+                ],
+                skills: ["JavaScript", "React", "Node.js", "PostgreSQL", "Git", "Docker"],
+                posted: "2025-08-29",
+                deadline: "2025-09-30",
+                applicants: 47,
+                views: 234
+            },
+            2: {
+                id: 2,
+                title: "Data Scientist",
+                company: "Data Analytics Inc",
+                location: "Medellín, Colombia",
+                type: "Full Time",
+                modality: "Remote",
+                salary: "$5,000,000 - $7,000,000 COP",
+                experience: "2-4 years",
+                description: `
+                    <p>Join our Data Science team to develop predictive models and advanced analytics.</p>
+                    <h6>Responsibilities:</h6>
+                    <ul>
+                        <li>Develop and maintain machine learning models</li>
+                        <li>Analyze large datasets to extract insights</li>
+                        <li>Create interactive dashboards and visualizations</li>
+                        <li>Collaborate with product and business teams</li>
+                    </ul>
+                `,
+                requirements: [
+                    "Degree in Engineering, Mathematics, Statistics, or related fields",
+                    "Experience with Python and ML libraries (pandas, scikit-learn, TensorFlow)",
+                    "Knowledge of SQL and databases",
+                    "Experience with visualization tools (Tableau, Power BI)",
+                    "Analytical thinking and problem-solving skills"
+                ],
+                benefits: [
+                    "100% remote work",
+                    "High-end equipment included",
+                    "Family health insurance",
+                    "Performance bonuses",
+                    "Paid conferences and courses"
+                ],
+                skills: ["Python", "Machine Learning", "SQL", "Tableau", "Statistics", "TensorFlow"],
+                posted: "2025-08-28",
+                deadline: "2025-09-25",
+                applicants: 32,
+                views: 156
+            }
+        };
+
+        function getJobId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id') || '1';
+        }
+
+        function loadJobDetails() {
+            const jobId = getJobId();
+            const job = jobsData[jobId];
+            
+            if (!job) {
+                document.getElementById('job-details').innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                        <h4>Job not found</h4>
+                        <p class="text-muted">The job you are looking for does not exist or has been removed.</p>
+                        <a href="jobs.html" class="btn btn-primary">View All Jobs</a>
+                    </div>
+                `;
+                return;
+            }
+
+            document.title = `${job.title} - ${job.company} | Catalyst`;
+
+            document.getElementById('job-details').innerHTML = `
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div>
+                        <h1 class="h2 mb-2">${job.title}</h1>
+                        <div class="text-muted mb-3">
+                            <i class="fas fa-building me-2"></i>${job.company}
+                            <span class="mx-2">•</span>
+                            <i class="fas fa-map-marker-alt me-2"></i>${job.location}
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="badge bg-primary">${job.type}</span>
+                            <span class="badge bg-success">${job.modality}</span>
+                            <span class="badge bg-warning text-dark">${job.experience}</span>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="h4 text-success mb-0">${job.salary}</div>
+                        <small class="text-muted">Monthly salary</small>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h5><i class="fas fa-info-circle me-2"></i>Job Description</h5>
+                    <div class="job-description">${job.description}</div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <h5><i class="fas fa-check-circle me-2"></i>Requirements</h5>
+                        <ul class="list-unstyled">
+                            ${job.requirements.map(req => `
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>${req}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <h5><i class="fas fa-gift me-2"></i>Benefits</h5>
+                        <ul class="list-unstyled">
+                            ${job.benefits.map(benefit => `
+                                <li class="mb-2">
+                                    <i class="fas fa-star text-warning me-2"></i>${benefit}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h5><i class="fas fa-code me-2"></i>Required Skills</h5>
+                    <div class="skills-container">
+                        ${job.skills.map(skill => `
+                            <span class="badge bg-light text-dark me-2 mb-2 py-2 px-3">${skill}</span>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong><i class="fas fa-calendar me-1"></i>Posted on:</strong> ${formatDate(job.posted)}
+                        </div>
+                        <div class="col-md-6">
+                            <strong><i class="fas fa-clock me-1"></i>Deadline:</strong> ${formatDate(job.deadline)}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('applicants-count').textContent = job.applicants;
+            document.getElementById('views-count').textContent = job.views;
+            document.getElementById('applications-count').textContent = job.applicants;
+
+            loadCompanyInfo(job.company);
+        }
+
+        function loadCompanyInfo(companyName) {
+            document.getElementById('company-info').innerHTML = `
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-building me-2"></i>About the Company</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="../img/logo2.png" alt="${companyName}" class="me-3" style="width: 60px; height: 60px; object-fit: contain;">
+                        <div>
+                            <h6 class="mb-0">${companyName}</h6>
+                            <small class="text-muted">Technology • 500-1000 employees</small>
+                        </div>
+                    </div>
+                    <p class="text-muted mb-3">
+                        ${companyName} is a leading technology company specializing in innovative solutions 
+                        for the business sector. With over 10 years of experience in the market.
+                    </p>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-globe me-1"></i>Website
+                        </a>
+                        <a href="#" class="btn btn-outline-info btn-sm">
+                            <i class="fab fa-linkedin me-1"></i>LinkedIn
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadJobDetails();
+
+            document.getElementById('apply-btn').addEventListener('click', () => {
+                const jobId = getJobId();
+                const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+                
+                if (!isAuthenticated) {
+                    if (confirm('You need to log in to apply. Do you want to go to the login page?')) {
+                        window.location.href = 'login.html';
+                    }
+                } else {
+                    alert('Application submitted successfully! We will contact you soon.');
+                    const currentCount = parseInt(document.getElementById('applicants-count').textContent);
+                    document.getElementById('applicants-count').textContent = currentCount + 1;
+                    document.getElementById('applications-count').textContent = currentCount + 1;
+                }
+            });
+
+            document.getElementById('save-btn').addEventListener('click', () => {
+                const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+                
+                if (!isAuthenticated) {
+                    if (confirm('You need to log in to save jobs. Do you want to go to the login page?')) {
+                        window.location.href = 'login.html';
+                    }
+                } else {
+                    const btn = document.getElementById('save-btn');
+                    const isSaved = btn.classList.contains('btn-danger');
+                    
+                    if (isSaved) {
+                        btn.classList.remove('btn-danger');
+                        btn.classList.add('btn-outline-danger');
+                        btn.innerHTML = '<i class="fas fa-heart me-2"></i>Save Job';
+                        alert('Job removed from favorites');
+                    } else {
+                        btn.classList.remove('btn-outline-danger');
+                        btn.classList.add('btn-danger');
+                        btn.innerHTML = '<i class="fas fa-heart me-2"></i>Saved';
+                        alert('Job saved to favorites');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

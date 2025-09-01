@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiring Manager Dashboard - Catalyst HR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+</head>
+<body style="padding-top: 0;" class="hr-page">
+    <!-- Navigation will be loaded dynamically -->
+
+    <main class="py-5 mt-4">
+        <div class="container">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">Hiring Dashboard</h2>
+                    <p class="text-muted mb-0" id="manager-department">Department: Technology</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#newVacancyModal">
+                        <i class="fas fa-plus me-1"></i> New Vacancy
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-filter me-1"></i> View
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" data-filter="all">All vacancies</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="active">Active only</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="pending">Pending approval</a></li>
+                            <li><a class="dropdown-item" href="#" data-filter="closed">Closed</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-briefcase fa-2x mb-2"></i>
+                            <h3 class="card-title" id="active-positions"></h3>
+                            <p class="card-text">Active Vacancies</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-user-check fa-2x mb-2"></i>
+                            <h3 class="card-title" id="candidates-reviewed"></h3>
+                            <p class="card-text">Candidates Reviewed</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-calendar-check fa-2x mb-2"></i>
+                            <h3 class="card-title" id="interviews-scheduled"></h3>
+                            <p class="card-text">Interviews Scheduled</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-hourglass-half fa-2x mb-2"></i>
+                            <h3 class="card-title" id="pending-approval"></h3>
+                            <p class="card-text">Pending Approval</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="row">
+                <!-- Job Vacancies -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-briefcase me-2"></i>
+                                My Vacancies
+                            </h5>
+                            <div class="d-flex gap-2">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <input type="radio" class="btn-check" name="vacancies-view" id="list-view-vacancies" checked>
+                                    <label class="btn btn-outline-primary" for="list-view-vacancies"><i class="fas fa-list"></i></label>
+                                    <input type="radio" class="btn-check" name="vacancies-view" id="card-view-vacancies">
+                                    <label class="btn btn-outline-primary" for="card-view-vacancies"><i class="fas fa-th-large"></i></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <!-- List View -->
+                            <div id="vacancies-list-view">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Position</th>
+                                                <th>Status</th>
+                                                <th>Candidates</th>
+                                                <th>Deadline</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="vacancies-tbody">
+                                            <!-- Data will be loaded dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Card View -->
+                            <div id="vacancies-card-view" class="p-3 d-none">
+                                <div class="row" id="vacancies-cards">
+                                    <!-- Cards will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity & Quick Actions -->
+                <div class="col-lg-4">
+                    <!-- Quick Actions -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-bolt me-2"></i>
+                                Quick Actions
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary btn-sm" onclick="location.href='resume-database.html'">
+                                    <i class="fas fa-search me-1"></i> Search Candidates
+                                </button>
+                                <button class="btn btn-success btn-sm" onclick="location.href='kanban.html'">
+                                    <i class="fas fa-columns me-1"></i> View Pipeline
+                                </button>
+                                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#scheduleInterviewModal">
+                                    <i class="fas fa-calendar-plus me-1"></i> Schedule Interview
+                                </button>
+                                <button class="btn btn-warning btn-sm" onclick="location.href='reports.html'">
+                                    <i class="fas fa-chart-line me-1"></i> View Reports
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-clock me-2"></i>
+                                Recent Activity
+                            </h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush" id="recent-activity">
+                                <!-- Activity will be loaded dynamically -->
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button class="btn btn-sm btn-outline-primary">View All Activity</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Candidates Section -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-users me-2"></i>
+                                Candidates by Vacancy
+                            </h5>
+                            <select class="form-select form-select-sm" style="width: auto;" id="vacancy-filter">
+                                <option value="">All vacancies</option>
+                                <!-- Options will be loaded dynamically -->
+                            </select>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="candidates-grid">
+                                <!-- Candidate cards will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- New Vacancy Modal -->
+    <div class="modal fade" id="newVacancyModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Vacancy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="new-vacancy-form">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="job-title" class="form-label">Job Title *</label>
+                                <input type="text" class="form-control" id="job-title" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="job-department" class="form-label">Department *</label>
+                                <select class="form-select" id="job-department" required>
+                                    <option value="">Select department...</option>
+                                    <option value="tecnologia">Technology</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="ventas">Sales</option>
+                                    <option value="rrhh">Human Resources</option>
+                                    <option value="finanzas">Finance</option>
+                                    <option value="operaciones">Operations</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="job-level" class="form-label">Level *</label>
+                                <select class="form-select" id="job-level" required>
+                                    <option value="">Select level...</option>
+                                    <option value="junior">Junior</option>
+                                    <option value="semi-senior">Semi-Senior</option>
+                                    <option value="senior">Senior</option>
+                                    <option value="lead">Lead</option>
+                                    <option value="manager">Manager</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="job-type" class="form-label">Employment Type *</label>
+                                <select class="form-select" id="job-type" required>
+                                    <option value="">Select type...</option>
+                                    <option value="tiempo-completo">Full Time</option>
+                                    <option value="medio-tiempo">Part Time</option>
+                                    <option value="contrato">Contract</option>
+                                    <option value="freelance">Freelance</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="job-location" class="form-label">Location *</label>
+                                <input type="text" class="form-control" id="job-location" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="job-modality" class="form-label">Modality *</label>
+                                <select class="form-select" id="job-modality" required>
+                                    <option value="">Select modality...</option>
+                                    <option value="presencial">On-site</option>
+                                    <option value="remoto">Remote</option>
+                                    <option value="hibrido">Hybrid</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="job-salary-min" class="form-label">Minimum Salary</label>
+                                <input type="number" class="form-control" id="job-salary-min" placeholder="3000000">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="job-salary-max" class="form-label">Maximum Salary</label>
+                                <input type="number" class="form-control" id="job-salary-max" placeholder="5000000">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="job-deadline" class="form-label">Application Deadline *</label>
+                            <input type="date" class="form-control" id="job-deadline" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="job-description" class="form-label">Job Description *</label>
+                            <textarea class="form-control" id="job-description" rows="4" required placeholder="Describe the main responsibilities of the position..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="job-requirements" class="form-label">Requirements *</label>
+                            <textarea class="form-control" id="job-requirements" rows="4" required placeholder="List the required qualifications (one per line)..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="job-benefits" class="form-label">Benefits</label>
+                            <textarea class="form-control" id="job-benefits" rows="3" placeholder="List the offered benefits (one per line)..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-accent" id="save-vacancy">
+                        <i class="fas fa-save me-1"></i> Create Vacancy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Interview Modal -->
+    <div class="modal fade" id="scheduleInterviewModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Schedule Interview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="schedule-interview-form">
+                        <div class="mb-3">
+                            <label for="interview-candidate" class="form-label">Candidate *</label>
+                            <select class="form-select" id="interview-candidate" required>
+                                <option value="">Select candidate...</option>
+                                <!-- Options will be loaded dynamically -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="interview-vacancy" class="form-label">Vacancy *</label>
+                            <select class="form-select" id="interview-vacancy" required>
+                                <option value="">Select vacancy...</option>
+                                <!-- Options will be loaded dynamically -->
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="interview-date" class="form-label">Date *</label>
+                                <input type="date" class="form-control" id="interview-date" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="interview-time" class="form-label">Time *</label>
+                                <input type="time" class="form-control" id="interview-time" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="interview-type" class="form-label">Interview Type *</label>
+                            <select class="form-select" id="interview-type" required>
+                                <option value="">Select type...</option>
+                                <option value="presencial">On-site</option>
+                                <option value="virtual">Virtual</option>
+                                <option value="telefonica">Phone</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="interview-duration" class="form-label">Duration (minutes)</label>
+                            <select class="form-select" id="interview-duration">
+                                <option value="30">30 minutes</option>
+                                <option value="45">45 minutes</option>
+                                <option value="60" selected>1 hour</option>
+                                <option value="90">1 hour 30 minutes</option>
+                                <option value="120">2 hours</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="interview-notes" class="form-label">Interview Notes</label>
+                            <textarea class="form-control" id="interview-notes" rows="3" placeholder="Add special notes or instructions..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-accent" id="save-interview">
+                        <i class="fas fa-calendar-plus me-1"></i> Schedule Interview
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Candidate Detail Modal -->
+    <div class="modal fade" id="candidateDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title" id="candidate-modal-name">Candidate Name</h5>
+                        <small class="text-muted" id="candidate-modal-position">Applied position</small>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div id="candidate-profile-content">
+                                <!-- Profile content will be loaded here -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Actions</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-success btn-sm" id="approve-candidate">
+                                            <i class="fas fa-check me-1"></i> Approve
+                                        </button>
+                                        <button class="btn btn-info btn-sm" id="schedule-candidate-interview">
+                                            <i class="fas fa-calendar me-1"></i> Interview
+                                        </button>
+                                        <button class="btn btn-warning btn-sm" id="request-more-info">
+                                            <i class="fas fa-question me-1"></i> More Information
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" id="reject-candidate-modal">
+                                            <i class="fas fa-times me-1"></i> Reject
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Comments</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="candidate-comments" class="mb-3" style="max-height: 200px; overflow-y: auto;">
+                                        <!-- Comments will be loaded here -->
+                                    </div>
+                                    <textarea class="form-control mb-2" id="new-comment" rows="3" placeholder="Add comment..."></textarea>
+                                    <button class="btn btn-primary btn-sm w-100" id="add-comment">
+                                        <i class="fas fa-comment me-1"></i> Add Comment
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../js/hiring-dashboard-enhanced.js"></script>
+
+    <!-- Navigation and Authentication System -->
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { updateAuthUI, ROLES } from '../js/roles.js';
+        import { initPageWithGuards } from '../js/guards.js';
+        
+        // Initialize page with HR role guards
+        initPageWithGuards({
+            pageName: 'hiring-dashboard.html',
+            requiredRoles: [ROLES.ADMIN, ROLES.RECRUITER, ROLES.HIRING_MANAGER],
+            authRequired: true,
+            basePath: '../',
+            onAccessGranted: (user) => {
+                // Initialize navigation only after access is confirmed
+                initNavigation('hiring-dashboard', true);
+                updateAuthUI();
+                console.log('✅ Hiring dashboard initialized for user:', user.firstName);
+            },
+            onAccessDenied: () => {
+                console.log('❌ Access denied to hiring dashboard');
+            }
+        });
+    </script>
+</body>
+</html>

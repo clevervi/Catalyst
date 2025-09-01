@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training and Development - Catalyst HR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+    <style>
+        .course-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .course-image {
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .skill-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        .progress-ring {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .progress-ring__circle {
+            stroke: #e2e8f0;
+            stroke-width: 4;
+            fill: transparent;
+            r: 26;
+            cx: 30;
+            cy: 30;
+        }
+        
+        .progress-ring__circle--fill {
+            stroke: #10b981;
+            stroke-dasharray: 163.36;
+            stroke-dashoffset: calc(163.36 - (163.36 * var(--progress)) / 100);
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.3s ease;
+        }
+
+        .level-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+
+        .instructor-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+        }
+    </style>
+</head>
+<body class="hr-page">
+    <!-- Navigation will be inserted by role management -->
+
+    <main class="py-5 mt-4">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="fas fa-graduation-cap me-2"></i>
+                        Training and Development
+                    </h2>
+                    <p class="text-muted mb-0">Manage professional training and development programs</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-success" id="import-courses">
+                        <i class="fas fa-upload me-1"></i>Import
+                    </button>
+                    <button class="btn btn-outline-info" id="export-courses">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#courseModal">
+                        <i class="fas fa-plus me-1"></i>New Course
+                    </button>
+                </div>
+            </div>
+
+            <!-- Training Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card" style="border-left-color: #3b82f6;">
+                    <div class="fs-3 fw-bold text-primary" id="total-courses">0</div>
+                    <div class="text-muted">Available Courses</div>
+                </div>
+                <div class="stat-card" style="border-left-color: #10b981;">
+                    <div class="fs-3 fw-bold text-success" id="active-enrollments">0</div>
+                    <div class="text-muted">Active Enrollments</div>
+                </div>
+                <div class="stat-card" style="border-left-color: #f59e0b;">
+                    <div class="fs-3 fw-bold text-warning" id="completed-courses">0</div>
+                    <div class="text-muted">Completed Courses</div>
+                </div>
+                <div class="stat-card" style="border-left-color: #8b5cf6;">
+                    <div class="fs-3 fw-bold text-info" id="certifications-issued">0</div>
+                    <div class="text-muted">Certifications</div>
+                </div>
+                <div class="stat-card" style="border-left-color: #06b6d4;">
+                    <div class="fs-3 fw-bold text-info" id="avg-rating">0</div>
+                    <div class="text-muted">Average Rating</div>
+                </div>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label">Search Courses</label>
+                            <input type="text" class="form-control" id="search-courses" placeholder="Title, instructor, skills...">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Level</label>
+                            <select class="form-select" id="filter-level">
+                                <option value="">All</option>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="filter-status">
+                                <option value="">All</option>
+                                <option value="active">Active</option>
+                                <option value="upcoming">Upcoming</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" id="filter-category">
+                                <option value="">All</option>
+                                <option value="Technology">Technology</option>
+                                <option value="Design">Design</option>
+                                <option value="Management">Management</option>
+                                <option value="Soft Skills">Soft Skills</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button class="btn btn-outline-secondary w-100" id="clear-filters">
+                                <i class="fas fa-times me-1"></i>Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Navigation Tabs -->
+            <ul class="nav nav-tabs mb-4" id="course-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-courses-tab" data-bs-toggle="tab" data-bs-target="#all-courses" type="button" role="tab">
+                        <i class="fas fa-th-large me-1"></i>All Courses
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="my-courses-tab" data-bs-toggle="tab" data-bs-target="#my-courses" type="button" role="tab">
+                        <i class="fas fa-user-graduate me-1"></i>My Courses
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="recommended-tab" data-bs-toggle="tab" data-bs-target="#recommended" type="button" role="tab">
+                        <i class="fas fa-star me-1"></i>Recommended
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="progress-tab" data-bs-toggle="tab" data-bs-target="#progress" type="button" role="tab">
+                        <i class="fas fa-chart-line me-1"></i>My Progress
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="course-tab-content">
+                <!-- All Courses -->
+                <div class="tab-pane fade show active" id="all-courses" role="tabpanel">
+                    <div class="row" id="courses-grid">
+                        <!-- Courses will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- My Courses -->
+                <div class="tab-pane fade" id="my-courses" role="tabpanel">
+                    <div class="row" id="my-courses-grid">
+                        <!-- User's enrolled courses will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Recommended -->
+                <div class="tab-pane fade" id="recommended" role="tabpanel">
+                    <div class="row" id="recommended-grid">
+                        <!-- Recommended courses will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div class="tab-pane fade" id="progress" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">My Learning Progress</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="progress-content">
+                                <!-- Progress content will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Course Modal -->
+    <div class="modal fade" id="courseModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="courseModalTitle">New Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="course-form">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <!-- Course Information -->
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Course Information</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Course Title *</label>
+                                                <input type="text" class="form-control" id="course-title" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Instructor *</label>
+                                                <input type="text" class="form-control" id="course-instructor" required>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Duration *</label>
+                                                <input type="text" class="form-control" id="course-duration" placeholder="40 hours" required>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Level *</label>
+                                                <select class="form-select" id="course-level" required>
+                                                    <option value="Beginner">Beginner</option>
+                                                    <option value="Intermediate">Intermediate</option>
+                                                    <option value="Advanced">Advanced</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label class="form-label">Price</label>
+                                                <input type="text" class="form-control" id="course-price" placeholder="$299,000 COP">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Description *</label>
+                                            <textarea class="form-control" rows="4" id="course-description" required placeholder="Describe the course content and objectives..."></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Skills Developed</label>
+                                            <input type="text" class="form-control" id="course-skills" placeholder="JavaScript, React, Node.js... (comma separated)">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Course Content -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Course Content</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Learning Objectives</label>
+                                            <textarea class="form-control" rows="3" id="course-objectives" placeholder="• Objective 1&#10;• Objective 2&#10;• Objective 3"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Prerequisites</label>
+                                            <textarea class="form-control" rows="2" id="course-prerequisites" placeholder="Previous knowledge required..."></textarea>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Start Date</label>
+                                                <input type="date" class="form-control" id="course-start-date">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">End Date</label>
+                                                <input type="date" class="form-control" id="course-end-date">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Course Settings -->
+                            <div class="col-md-4">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Settings</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Course Status</label>
+                                            <select class="form-select" id="course-status">
+                                                <option value="active">Active</option>
+                                                <option value="upcoming">Upcoming</option>
+                                                <option value="completed">Completed</option>
+                                                <option value="draft">Draft</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Category</label>
+                                            <select class="form-select" id="course-category">
+                                                <option value="Technology">Technology</option>
+                                                <option value="Design">Design</option>
+                                                <option value="Management">Management</option>
+                                                <option value="Soft Skills">Soft Skills</option>
+                                                <option value="Marketing">Marketing</option>
+                                                <option value="Sales">Sales</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Maximum Students</label>
+                                            <input type="number" class="form-control" id="course-max-students" value="50">
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="course-certification" checked>
+                                                <label class="form-check-label" for="course-certification">
+                                                    Includes Certification
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="course-mandatory">
+                                                <label class="form-check-label" for="course-mandatory">
+                                                    Mandatory Course
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Course Image -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Course Image</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center mb-3">
+                                            <img id="course-image-preview" src="https://via.placeholder.com/300x200/f8fafc/666666?text=No+Image" 
+                                                 class="img-fluid rounded" style="max-height: 150px;">
+                                        </div>
+                                        <input type="file" class="form-control" id="course-image" accept="image/*">
+                                        <small class="text-muted">Formats: JPG, PNG (max. 2MB)</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-course">
+                        <i class="fas fa-save me-1"></i>Save Course
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Details Modal -->
+    <div class="modal fade" id="courseDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="courseDetailsTitle">Course Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="course-details-body">
+                    <!-- Course details will be populated by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" id="edit-course-btn">
+                        <i class="fas fa-edit me-1"></i>Edit
+                    </button>
+                    <button type="button" class="btn btn-primary" id="enroll-course-btn">
+                        <i class="fas fa-user-plus me-1"></i>Enroll
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enrollment Modal -->
+    <div class="modal fade" id="enrollmentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Course Enrollment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Important:</strong> Once enrolled, you will receive notifications about the course start and access to materials.
+                    </div>
+                    <div id="enrollment-course-info">
+                        <!-- Course info for enrollment will be populated -->
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Reason for Enrollment</label>
+                        <textarea class="form-control" rows="3" id="enrollment-reason" placeholder="Why are you interested in this course?"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirm-enrollment">
+                        <i class="fas fa-check me-1"></i>Confirm Enrollment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="hidden-file-input" style="display: none;" accept=".json,.csv">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { dataManager, exportImportManager } from '../js/data-manager.js';
+
+        let currentCourses = [];
+        let userEnrollments = [];
+        let editingCourseId = null;
+        let currentCourseForEnrollment = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if accessed from navigation and show work in progress message
+            checkAndShowWorkInProgressMessage();
+
+            // Initialize navigation
+            initNavigation('training', true);
+
+            // Load training data
+            loadTrainingData();
+
+            // Event listeners
+            initializeEventListeners();
+
+            // Initialize user enrollments
+            initializeUserEnrollments();
+        });
+
+        function loadTrainingData() {
+            currentCourses = dataManager.getCourses();
+            updateTrainingStats();
+            renderAllCourses();
+            renderMyCourses();
+            renderRecommendedCourses();
+            renderProgressTracking();
+        }
+
+        function updateTrainingStats() {
+            const courses = dataManager.getCourses();
+            const totalCourses = courses.length;
+            const activeEnrollments = userEnrollments.length;
+            const completedCourses = userEnrollments.filter(e => e.completed).length;
+            const certificationsIssued = completedCourses; // For demo purposes
+            const avgRating = courses.reduce((acc, course) => acc + (course.rating || 0), 0) / courses.length || 0;
+
+            document.getElementById('total-courses').textContent = totalCourses;
+            document.getElementById('active-enrollments').textContent = activeEnrollments;
+            document.getElementById('completed-courses').textContent = completedCourses;
+            document.getElementById('certifications-issued').textContent = certificationsIssued;
+            document.getElementById('avg-rating').textContent = avgRating.toFixed(1);
+        }
+
+        function renderAllCourses() {
+            const grid = document.getElementById('courses-grid');
+            
+            if (currentCourses.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-graduation-cap fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No courses available</h5>
+                        <p class="text-muted">Start by creating a new course</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = currentCourses.map(course => renderCourseCard(course)).join('');
+        }
+
+        function renderCourseCard(course) {
+            const isEnrolled = userEnrollments.some(e => e.course_id === course.id);
+            const enrollment = userEnrollments.find(e => e.course_id === course.id);
+            
+            return `
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card course-card h-100 position-relative">
+                        <div class="level-badge">
+                            <span class="badge bg-${getLevelColor(course.level)}">${course.level}</span>
+                        </div>
+                        
+                        <img src="${course.image || 'https://via.placeholder.com/400x200/667eea/white?text=' + encodeURIComponent(course.title)}" 
+                             class="card-img-top course-image" alt="${course.title}">
+                        
+                        <div class="card-body">
+                            <h6 class="card-title">${course.title}</h6>
+                            <p class="card-text small text-muted">${course.description.substring(0, 100)}...</p>
+                            
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="https://via.placeholder.com/32/6b7280/white?text=${course.instructor.substring(0,2)}" 
+                                     class="instructor-avatar me-2" alt="${course.instructor}">
+                                <div class="small">
+                                    <div class="fw-bold">${course.instructor}</div>
+                                    <div class="text-muted">${course.duration}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="small">
+                                    <i class="fas fa-star text-warning me-1"></i>
+                                    ${course.rating || 0} (${course.students || 0} students)
+                                </div>
+                                <div class="fw-bold text-primary">${course.price || 'Free'}</div>
+                            </div>
+                            
+                            ${course.skills ? `
+                            <div class="mb-3">
+                                ${course.skills.slice(0, 3).map(skill => 
+                                    `<span class="badge bg-light text-dark skill-badge me-1">${skill}</span>`
+                                ).join('')}
+                                ${course.skills.length > 3 ? `<span class="small text-muted">+${course.skills.length - 3}</span>` : ''}
+                            </div>
+                            ` : ''}
+                            
+                            ${isEnrolled && enrollment ? `
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="small">Progress:</span>
+                                    <span class="small fw-bold">${enrollment.progress}%</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: ${enrollment.progress}%"></div>
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="card-footer bg-white border-top-0">
+                            <div class="d-flex gap-1">
+                                <button class="btn btn-outline-primary btn-sm flex-fill" onclick="viewCourseDetails(${course.id})">
+                                    <i class="fas fa-eye me-1"></i>View
+                                </button>
+                                ${!isEnrolled ? `
+                                <button class="btn btn-primary btn-sm flex-fill" onclick="enrollInCourse(${course.id})">
+                                    <i class="fas fa-user-plus me-1"></i>Enroll
+                                </button>
+                                ` : enrollment.completed ? `
+                                <button class="btn btn-success btn-sm flex-fill" disabled>
+                                    <i class="fas fa-check me-1"></i>Completed
+                                </button>
+                                ` : `
+                                <button class="btn btn-info btn-sm flex-fill" onclick="continueCourse(${course.id})">
+                                    <i class="fas fa-play me-1"></i>Continue
+                                </button>
+                                `}
+                                <button class="btn btn-outline-secondary btn-sm" onclick="editCourse(${course.id})" title="Edit course">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMyCourses() {
+            const grid = document.getElementById('my-courses-grid');
+            const enrolledCourses = currentCourses.filter(course => 
+                userEnrollments.some(e => e.course_id === course.id)
+            );
+            
+            if (enrolledCourses.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">You don't have any enrolled courses</h5>
+                        <p class="text-muted">Explore our catalog and start learning</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('all-courses-tab').click()">
+                            View Available Courses
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = enrolledCourses.map(course => renderCourseCard(course)).join('');
+        }
+
+        function renderRecommendedCourses() {
+            // For demo purposes, recommend courses based on user's skills
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const userSkills = userData.skills || [];
+            
+            const recommendedCourses = currentCourses.filter(course => {
+                // Check if course skills match user's interests
+                return course.skills && course.skills.some(skill => 
+                    userSkills.some(userSkill => 
+                        skill.toLowerCase().includes(userSkill.toLowerCase()) ||
+                        userSkill.toLowerCase().includes(skill.toLowerCase())
+                    )
+                );
+            }).slice(0, 6);
+            
+            const grid = document.getElementById('recommended-grid');
+            
+            if (recommendedCourses.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-lightbulb fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No recommendations available</h5>
+                        <p class="text-muted">Complete your profile to receive personalized recommendations</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = recommendedCourses.map(course => renderCourseCard(course)).join('');
+        }
+
+        function renderProgressTracking() {
+            const progressContent = document.getElementById('progress-content');
+            const enrolledCourses = userEnrollments;
+            
+            if (enrolledCourses.length === 0) {
+                progressContent.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No progress to show</h5>
+                        <p class="text-muted">Enroll in courses to see your progress here</p>
+                    </div>
+                `;
+                return;
+            }
+
+            progressContent.innerHTML = `
+                <div class="row">
+                    ${enrolledCourses.map(enrollment => {
+                        const course = currentCourses.find(c => c.id === enrollment.course_id);
+                        if (!course) return '';
+                        
+                        return `
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="progress-ring me-3">
+                                                <svg class="progress-ring">
+                                                    <circle class="progress-ring__circle" stroke-dasharray="163.36" stroke-dashoffset="${163.36 - (163.36 * enrollment.progress) / 100}"></circle>
+                                                    <circle class="progress-ring__circle progress-ring__circle--fill" style="--progress: ${enrollment.progress}"></circle>
+                                                </svg>
+                                                <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
+                                                    <span class="fw-bold">${enrollment.progress}%</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">${course.title}</h6>
+                                                <div class="small text-muted mb-1">
+                                                    Started: ${new Date(enrollment.enrolled_date).toLocaleDateString('en-US')}
+                                                </div>
+                                                <div class="small">
+                                                    ${enrollment.completed 
+                                                        ? '<span class="badge bg-success">Completed</span>' 
+                                                        : '<span class="badge bg-primary">In Progress</span>'
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 d-flex gap-2">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="continueCourse(${course.id})">
+                                                <i class="fas fa-play me-1"></i>Continue
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-info" onclick="viewCourseDetails(${course.id})">
+                                                <i class="fas fa-info me-1"></i>Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                
+                <!-- Learning Path Suggestions -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h6 class="mb-0">Suggested Learning Paths</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center p-3 border rounded">
+                                    <i class="fas fa-code fa-2x text-primary mb-2"></i>
+                                    <h6>Full Stack Developer</h6>
+                                    <p class="small text-muted">JavaScript → React → Node.js → Databases</p>
+                                    <button class="btn btn-sm btn-outline-primary">View Path</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3 border rounded">
+                                    <i class="fas fa-palette fa-2x text-info mb-2"></i>
+                                    <h6>UI/UX Designer</h6>
+                                    <p class="small text-muted">Design Thinking → Figma → Prototyping → User Research</p>
+                                    <button class="btn btn-sm btn-outline-info">View Path</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3 border rounded">
+                                    <i class="fas fa-users fa-2x text-success mb-2"></i>
+                                    <h6>Team Leader</h6>
+                                    <p class="small text-muted">Leadership → Management → Communication → Strategy</p>
+                                    <button class="btn btn-sm btn-outline-success">View Path</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initializeEventListeners() {
+            // Search and filters
+            document.getElementById('search-courses').addEventListener('input', filterCourses);
+            document.getElementById('filter-level').addEventListener('change', filterCourses);
+            document.getElementById('filter-status').addEventListener('change', filterCourses);
+            document.getElementById('filter-category').addEventListener('change', filterCourses);
+            document.getElementById('clear-filters').addEventListener('click', clearFilters);
+
+            // Course management
+            document.getElementById('save-course').addEventListener('click', saveCourse);
+            document.getElementById('confirm-enrollment').addEventListener('click', confirmEnrollment);
+
+            // Import/Export
+            document.getElementById('export-courses').addEventListener('click', exportCourses);
+            document.getElementById('import-courses').addEventListener('click', () => {
+                document.getElementById('hidden-file-input').click();
+            });
+
+            // File import
+            document.getElementById('hidden-file-input').addEventListener('change', handleFileImport);
+
+            // Image preview
+            document.getElementById('course-image').addEventListener('change', handleImagePreview);
+
+            // Reset modal when closed
+            document.getElementById('courseModal').addEventListener('hidden.bs.modal', resetModal);
+        }
+
+        function initializeUserEnrollments() {
+            // Initialize user enrollments in localStorage if they don't exist
+            if (!localStorage.getItem('catalyst_user_enrollments')) {
+                // Sample enrollments for demo
+                userEnrollments = [
+                    { id: 1, course_id: 1, progress: 75, enrolled_date: '2024-01-15', completed: false },
+                    { id: 2, course_id: 2, progress: 100, enrolled_date: '2024-01-10', completed: true, completed_date: '2024-01-25' }
+                ];
+                localStorage.setItem('catalyst_user_enrollments', JSON.stringify(userEnrollments));
+            } else {
+                userEnrollments = JSON.parse(localStorage.getItem('catalyst_user_enrollments'));
+            }
+        }
+
+        function saveCourse() {
+            const form = document.getElementById('course-form');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const courseData = {
+                title: document.getElementById('course-title').value,
+                instructor: document.getElementById('course-instructor').value,
+                duration: document.getElementById('course-duration').value,
+                level: document.getElementById('course-level').value,
+                price: document.getElementById('course-price').value,
+                description: document.getElementById('course-description').value,
+                skills: document.getElementById('course-skills').value.split(',').map(s => s.trim()).filter(s => s),
+                objectives: document.getElementById('course-objectives').value,
+                prerequisites: document.getElementById('course-prerequisites').value,
+                startDate: document.getElementById('course-start-date').value,
+                endDate: document.getElementById('course-end-date').value,
+                status: document.getElementById('course-status').value,
+                category: document.getElementById('course-category').value,
+                maxStudents: parseInt(document.getElementById('course-max-students').value),
+                certification: document.getElementById('course-certification').checked,
+                mandatory: document.getElementById('course-mandatory').checked,
+                image: document.getElementById('course-image-preview').src
+            };
+
+            const courses = dataManager.getCourses();
+
+            if (editingCourseId) {
+                // Update existing course
+                const index = courses.findIndex(course => course.id === editingCourseId);
+                if (index !== -1) {
+                    courses[index] = { ...courses[index], ...courseData };
+                    dataManager.setCourses(courses);
+                    showToast('Course updated successfully', 'success');
+                }
+            } else {
+                // Create new course
+                const newCourse = {
+                    id: dataManager.generateId('courses'),
+                    ...courseData,
+                    created_date: new Date().toISOString().split('T')[0],
+                    students: 0,
+                    rating: 0
+                };
+                courses.push(newCourse);
+                dataManager.setCourses(courses);
+                showToast('Course created successfully', 'success');
+            }
+
+            // Close modal and refresh
+            const modal = bootstrap.Modal.getInstance(document.getElementById('courseModal'));
+            modal.hide();
+            loadTrainingData();
+        }
+
+        function viewCourseDetails(courseId) {
+            const course = dataManager.findById('courses', courseId);
+            if (!course) return;
+
+            const enrollment = userEnrollments.find(e => e.course_id === courseId);
+            const isEnrolled = !!enrollment;
+
+            document.getElementById('courseDetailsTitle').textContent = course.title;
+            document.getElementById('course-details-body').innerHTML = `
+                <div class="row">
+                    <div class="col-md-8">
+                        <img src="${course.image || 'https://via.placeholder.com/600x300/667eea/white?text=' + encodeURIComponent(course.title)}" 
+                             class="img-fluid rounded mb-3" alt="${course.title}">
+                        
+                        <h6>Description</h6>
+                        <p>${course.description}</p>
+                        
+                        ${course.objectives ? `
+                        <h6>Learning Objectives</h6>
+                        <div class="mb-3">
+                            ${course.objectives.split('\n').map(obj => obj.trim()).filter(obj => obj).map(obj => 
+                                `<div class="d-flex align-items-start mb-1">
+                                    <i class="fas fa-check text-success me-2 mt-1"></i>
+                                    <span class="small">${obj.replace('•', '').trim()}</span>
+                                </div>`
+                            ).join('')}
+                        </div>
+                        ` : ''}
+                        
+                        ${course.prerequisites ? `
+                        <h6>Prerequisites</h6>
+                        <p class="small">${course.prerequisites}</p>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Course Information</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <img src="https://via.placeholder.com/40/6b7280/white?text=${course.instructor.substring(0,2)}" 
+                                         class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                                    <div>
+                                        <div class="fw-bold small">${course.instructor}</div>
+                                        <div class="text-muted tiny">Instructor</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="small text-muted">Duration</div>
+                                        <div class="fw-bold">${course.duration}</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="small text-muted">Level</div>
+                                        <span class="badge bg-${getLevelColor(course.level)}">${course.level}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="small text-muted">Students</div>
+                                        <div class="fw-bold">${course.students || 0}</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="small text-muted">Rating</div>
+                                        <div class="fw-bold">
+                                            <i class="fas fa-star text-warning me-1"></i>
+                                            ${course.rating || 0}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                ${course.price ? `
+                                <div class="mb-3">
+                                    <div class="small text-muted">Price</div>
+                                    <div class="fw-bold text-primary">${course.price}</div>
+                                </div>
+                                ` : ''}
+                                
+                                ${course.certification ? `
+                                <div class="mb-3">
+                                    <div class="badge bg-success">
+                                        <i class="fas fa-certificate me-1"></i>Includes Certification
+                                    </div>
+                                </div>
+                                ` : ''}
+                                
+                                ${isEnrolled ? `
+                                <div class="mb-3">
+                                    <div class="small text-muted">Your Progress</div>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: ${enrollment.progress}%">${enrollment.progress}%</div>
+                                    </div>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        
+                        ${course.skills ? `
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h6 class="mb-0">Skills</h6>
+                            </div>
+                            <div class="card-body">
+                                ${course.skills.map(skill => 
+                                    `<span class="badge bg-light text-dark me-1 mb-1">${skill}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            // Set up modal buttons
+            document.getElementById('edit-course-btn').onclick = () => editCourse(courseId);
+            document.getElementById('enroll-course-btn').onclick = () => enrollInCourse(courseId);
+            
+            if (isEnrolled) {
+                document.getElementById('enroll-course-btn').innerHTML = enrollment.completed 
+                    ? '<i class="fas fa-check me-1"></i>Completed'
+                    : '<i class="fas fa-play me-1"></i>Continue';
+            }
+
+            new bootstrap.Modal(document.getElementById('courseDetailsModal')).show();
+        }
+
+        function enrollInCourse(courseId) {
+            const course = dataManager.findById('courses', courseId);
+            if (!course) return;
+
+            currentCourseForEnrollment = courseId;
+
+            // Update enrollment modal
+            document.getElementById('enrollment-course-info').innerHTML = `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6>${course.title}</h6>
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted">Instructor:</small><br>
+                                <span>${course.instructor}</span>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Duration:</small><br>
+                                <span>${course.duration}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            new bootstrap.Modal(document.getElementById('enrollmentModal')).show();
+        }
+
+        function confirmEnrollment() {
+            if (!currentCourseForEnrollment) return;
+
+            const reason = document.getElementById('enrollment-reason').value.trim();
+            
+            // Create new enrollment
+            const newEnrollment = {
+                id: userEnrollments.length + 1,
+                course_id: currentCourseForEnrollment,
+                progress: 0,
+                enrolled_date: new Date().toISOString().split('T')[0],
+                completed: false,
+                reason: reason
+            };
+
+            userEnrollments.push(newEnrollment);
+            localStorage.setItem('catalyst_user_enrollments', JSON.stringify(userEnrollments));
+
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('enrollmentModal'));
+            modal.hide();
+
+            // Update course student count
+            const courses = dataManager.getCourses();
+            const courseIndex = courses.findIndex(c => c.id === currentCourseForEnrollment);
+            if (courseIndex !== -1) {
+                courses[courseIndex].students = (courses[courseIndex].students || 0) + 1;
+                dataManager.setCourses(courses);
+            }
+
+            showToast('Enrollment completed successfully', 'success');
+            
+            // Refresh data
+            loadTrainingData();
+            
+            // Reset
+            currentCourseForEnrollment = null;
+            document.getElementById('enrollment-reason').value = '';
+        }
+
+        function continueCourse(courseId) {
+            // In a real app, this would open the course player
+            showToast('Redirecting to course content...', 'info');
+            
+            // Simulate progress update
+            const enrollment = userEnrollments.find(e => e.course_id === courseId);
+            if (enrollment && !enrollment.completed) {
+                enrollment.progress = Math.min(100, enrollment.progress + 10);
+                
+                if (enrollment.progress >= 100) {
+                    enrollment.completed = true;
+                    enrollment.completed_date = new Date().toISOString().split('T')[0];
+                }
+                
+                localStorage.setItem('catalyst_user_enrollments', JSON.stringify(userEnrollments));
+                loadTrainingData();
+            }
+        }
+
+        function editCourse(courseId) {
+            const course = dataManager.findById('courses', courseId);
+            if (!course) return;
+
+            editingCourseId = courseId;
+            
+            // Fill form with course data
+            document.getElementById('course-title').value = course.title || '';
+            document.getElementById('course-instructor').value = course.instructor || '';
+            document.getElementById('course-duration').value = course.duration || '';
+            document.getElementById('course-level').value = course.level || 'Beginner';
+            document.getElementById('course-price').value = course.price || '';
+            document.getElementById('course-description').value = course.description || '';
+            document.getElementById('course-skills').value = (course.skills || []).join(', ');
+            document.getElementById('course-objectives').value = course.objectives || '';
+            document.getElementById('course-prerequisites').value = course.prerequisites || '';
+            document.getElementById('course-start-date').value = course.startDate || '';
+            document.getElementById('course-end-date').value = course.endDate || '';
+            document.getElementById('course-status').value = course.status || 'active';
+            document.getElementById('course-category').value = course.category || 'Technology';
+            document.getElementById('course-max-students').value = course.maxStudents || 50;
+            document.getElementById('course-certification').checked = course.certification !== false;
+            document.getElementById('course-mandatory').checked = course.mandatory || false;
+            
+            if (course.image) {
+                document.getElementById('course-image-preview').src = course.image;
+            }
+
+            document.getElementById('courseModalTitle').textContent = 'Edit Course';
+            new bootstrap.Modal(document.getElementById('courseModal')).show();
+        }
+
+        function filterCourses() {
+            const searchTerm = document.getElementById('search-courses').value.toLowerCase();
+            const levelFilter = document.getElementById('filter-level').value;
+            const statusFilter = document.getElementById('filter-status').value;
+            const categoryFilter = document.getElementById('filter-category').value;
+
+            const filteredCourses = currentCourses.filter(course => {
+                const matchesSearch = !searchTerm || 
+                    course.title.toLowerCase().includes(searchTerm) ||
+                    course.instructor.toLowerCase().includes(searchTerm) ||
+                    (course.skills && course.skills.some(skill => skill.toLowerCase().includes(searchTerm)));
+
+                const matchesLevel = !levelFilter || course.level === levelFilter;
+                const matchesStatus = !statusFilter || course.status === statusFilter;
+                const matchesCategory = !categoryFilter || course.category === categoryFilter;
+
+                return matchesSearch && matchesLevel && matchesStatus && matchesCategory;
+            });
+
+            renderFilteredCourses(filteredCourses);
+        }
+
+        function renderFilteredCourses(courses) {
+            const grid = document.getElementById('courses-grid');
+            grid.innerHTML = courses.map(course => renderCourseCard(course)).join('');
+        }
+
+        function clearFilters() {
+            document.getElementById('search-courses').value = '';
+            document.getElementById('filter-level').value = '';
+            document.getElementById('filter-status').value = '';
+            document.getElementById('filter-category').value = '';
+            renderAllCourses();
+        }
+
+        function resetModal() {
+            editingCourseId = null;
+            document.getElementById('course-form').reset();
+            document.getElementById('courseModalTitle').textContent = 'New Course';
+            document.getElementById('course-image-preview').src = 'https://via.placeholder.com/300x200/f8fafc/666666?text=No+Image';
+        }
+
+        function handleImagePreview(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast('Image is too large. Maximum 2MB.', 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('course-image-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function exportCourses() {
+            const courses = dataManager.getCourses();
+            const exportData = courses.map(course => ({
+                id: course.id,
+                title: course.title,
+                instructor: course.instructor,
+                duration: course.duration,
+                level: course.level,
+                price: course.price,
+                description: course.description,
+                status: course.status,
+                category: course.category,
+                students: course.students,
+                rating: course.rating
+            }));
+
+            exportImportManager.exportToCSV(exportData, 'catalyst_courses.csv');
+            showToast('Courses exported successfully', 'success');
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.type === 'application/json' || file.name.endsWith('.json')) {
+                exportImportManager.importFromFile(file, (success, data, error) => {
+                    if (success) {
+                        loadTrainingData();
+                        showToast('Data imported successfully', 'success');
+                    } else {
+                        showToast('Error importing file: ' + (error?.message || 'Invalid format'), 'error');
+                    }
+                });
+            } else {
+                showToast('File format not supported. Use JSON.', 'warning');
+            }
+        }
+
+        function getLevelColor(level) {
+            const colors = {
+                'Beginner': 'success',
+                'Intermediate': 'warning',
+                'Advanced': 'danger'
+            };
+            return colors[level] || 'secondary';
+        }
+
+        function checkAndShowWorkInProgressMessage() {
+            // Check if this page was accessed from the navigation bar
+            const referrer = document.referrer;
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromNav = urlParams.get('fromNav') === 'true';
+            
+            // Show work in progress message if accessed from navigation or if it's the first visit
+            if (fromNav || referrer.includes('index.html') || !sessionStorage.getItem('training_page_visited')) {
+                sessionStorage.setItem('training_page_visited', 'true');
+                
+                // Create work in progress modal
+                const wipModal = document.createElement('div');
+                wipModal.className = 'modal fade';
+                wipModal.id = 'wipModal';
+                wipModal.innerHTML = `
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-warning text-dark">
+                                <h5 class="modal-title">
+                                    <i class="fas fa-tools me-2"></i>
+                                    Platform in Development
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center mb-3">
+                                    <i class="fas fa-hard-hat fa-4x text-warning mb-3"></i>
+                                    <h6>We're working on improvements!</h6>
+                                </div>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Current status:</strong> This training platform is under active development.
+                                </div>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="fas fa-check text-success me-2"></i>
+                                        Basic functionality implemented
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-spinner text-primary me-2"></i>
+                                        Interface improvements in progress
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-clock text-warning me-2"></i>
+                                        New features coming soon
+                                    </li>
+                                </ul>
+                                <p class="mb-0 small text-muted">
+                                    You can explore the available functionalities, but keep in mind that some features are being perfected.
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
+                                    <i class="fas fa-rocket me-1"></i>Explore anyway!
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(wipModal);
+                
+                // Show the modal after a short delay
+                setTimeout(() => {
+                    const modal = new bootstrap.Modal(wipModal);
+                    modal.show();
+                    
+                    // Remove modal from DOM when hidden
+                    wipModal.addEventListener('hidden.bs.modal', () => {
+                        wipModal.remove();
+                    });
+                }, 500);
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const alertClass = type === 'error' ? 'danger' : type;
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${alertClass} position-fixed top-0 end-0 m-3`;
+            toast.style.zIndex = '9999';
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 4000);
+        }
+
+        // Make functions globally available
+        window.viewCourseDetails = viewCourseDetails;
+        window.enrollInCourse = enrollInCourse;
+        window.continueCourse = continueCourse;
+        window.editCourse = editCourse;
+    </script>
+</body>
+</html>

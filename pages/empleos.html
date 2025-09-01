@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technology Jobs - Catalyst</title>
+    <meta name="description"
+        content="Search and find the best technology jobs in Colombia. Filter by location, salary, modality and more.">
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.cdnfonts.com/css/sf-pro-display" as="font" crossorigin>
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+</head>
+
+<body>
+    <!-- Navigation will be loaded dynamically -->
+
+    <main class="py-5 mt-4">
+        <div class="container">
+            <!-- Coming Soon Notice -->
+            <div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-rocket me-3 fa-lg"></i>
+                    <div>
+                        <h6 class="alert-heading mb-1">Exciting Updates Coming Soon!</h6>
+                        <p class="mb-0">We're enhancing the job search experience with new features and improvements. Stay tuned!</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <div class="row">
+                <!-- Advanced filters -->
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card filter-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4"><i class="fas fa-sliders-h me-2"></i> Advanced Filters</h5>
+
+                            <form id="job-filters">
+                                <!-- Text search field -->
+                                <div class="filter-section">
+                                    <h6 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i> Location</h6>
+                                    <select class="form-select mb-2" name="location">
+                                        <option value="">All locations</option>
+                                        <option value="Bogotá">Bogotá</option>
+                                        <option value="Medellín">Medellín</option>
+                                        <option value="Cali">Cali</option>
+                                        <option value="Barranquilla">Barranquilla</option>
+                                        <option value="Remote">Remote</option>
+                                    </select>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="relocation">
+                                        <label class="form-check-label" for="relocation">Available for relocation</label>
+                                    </div>
+                                </div>
+
+                                <div class="filter-section">
+                                    <h6 class="mb-3"><i class="fas fa-code me-2"></i> Area</h6>
+                                    <div class="d-flex flex-wrap">
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="frontend">Frontend</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="backend">Backend</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="fullstack">Fullstack</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="dataScience">Data Science</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="devops">DevOps</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="uxui">UX/UI</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="qa">QA</button>
+                                    </div>
+                                </div>
+
+                                <div class="filter-section">
+                                    <h6 class="mb-3"><i class="fas fa-star me-2"></i> Level</h6>
+                                    <div class="d-flex flex-wrap">
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="trainee">Trainee</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="junior">Junior</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="semi-senior">Semi-Senior</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="senior">Senior</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="architect">Architect</button>
+                                    </div>
+                                </div>
+
+                                <div class="filter-section">
+                                    <h6 class="mb-3"><i class="fas fa-laptop-house me-2"></i> Modality</h6>
+                                    <div class="d-flex flex-wrap">
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="onsite">On-site</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="remote">Remote</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="hybrid">Hybrid</button>
+                                    </div>
+                                </div>
+
+                                <div class="filter-section">
+                                    <h6 class="mb-3"><i class="fas fa-file-contract me-2"></i> Contract Type</h6>
+                                    <div class="d-flex flex-wrap">
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="permanent">Permanent</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="fixed-term">Fixed Term</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="contract">Contract</button>
+                                        <button type="button"
+                                            class="filter-btn btn btn-outline-primary btn-sm mb-2 me-2"
+                                            data-filter="freelance">Freelance</button>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2 mt-4">
+                                    <button class="btn btn-accent" type="submit" id="apply-filters-btn">
+                                        <i class="fas fa-filter me-1"></i> Apply Filters
+                                    </button>
+                                    <button class="btn btn-outline-secondary" type="reset">
+                                        <i class="fas fa-undo me-1"></i> Clear
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced job list -->
+                <div class="col-md-8 col-lg-9">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+                        <h2 class="mb-3 mb-md-0">Job Offers</h2>
+                        <div class="d-flex align-items-center">
+                            <span class="me-3">Showing <strong id="jobs-count">12 of 150</strong> jobs</span>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                    id="sortDropdown" data-bs-toggle="dropdown">
+                                    <i class="fas fa-sort me-1"></i> Sort by
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item active" href="#" data-sort="recent">Most recent</a></li>
+                                    <li><a class="dropdown-item" href="#" data-sort="salary">Best paid</a></li>
+                                    <li><a class="dropdown-item" href="#" data-sort="relevant">Most relevant</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="#" data-sort="location">Near me</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info d-flex align-items-center">
+                        <i class="fas fa-info-circle me-3 fs-4"></i>
+                        <div>
+                            <strong>Professional tip:</strong> Complete your profile to increase your chances by 70%
+                            <a href="perfil.html" class="alert-link ms-2">Complete now</a>
+                        </div>
+                    </div>
+
+                    <div class="job-list" id="job-list-container">
+                        <!-- Jobs will be loaded dynamically here -->
+                    </div>
+
+                    <!-- Enhanced pagination -->
+                    <nav aria-label="Page navigation" id="pagination-container">
+                        <ul class="pagination justify-content-center mt-5">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">4</a></li>
+                            <li class="page-item"><a class="page-link" href="#">5</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for job/course details -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="detailsModalLabel">Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading details...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-accent" id="applyDetailsBtn">Apply now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer will be loaded dynamically -->
+
+    <!-- Toast container for notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
+    <script type="module">
+        // import { loadJobs, filterJobs, sortJobs, initJobFilters } from '../js/jobs-enhanced.js';
+        import { updateAuthUI, ROLES } from '../js/modules/auth.js';
+        import { initNavigation } from '../js/modules/navigation.js';
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize navigation with current page
+            initNavigation('empleos', true);
+            
+            // Update authentication UI
+            updateAuthUI();
+            
+            try {
+                // Initialize job filters and load jobs
+                initJobFilters();
+                await loadJobs();
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                document.getElementById('job-list-container').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error loading jobs. Please try again.
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

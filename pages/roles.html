@@ -1,0 +1,543 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role and Permission System - Catalyst HR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="shortcut icon" href="../img/image.png" type="image/x-icon">
+    <style>
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #6a11cb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 15px;
+        }
+        
+        .test-result {
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #166534;
+        }
+        
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .features {
+            margin-top: 30px;
+        }
+        
+        .features h3 {
+            margin-bottom: 15px;
+            color: #475569;
+        }
+        
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            color: #10b981;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .toast.success {
+            background: #10b981;
+        }
+        
+        .toast.error {
+            background: #ef4444;
+        }
+        
+        .toast.info {
+            background: #3b82f6;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="hr-page">
+    <!-- Navigation will be loaded dynamically -->
+
+    <main class="py-5 mt-4">
+        <div class="container">
+            <!-- Header -->
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body text-center">
+                    <h1 class="display-5 mb-2">
+                        <i class="fas fa-user-shield me-2"></i>
+                        Role Management System
+                    </h1>
+                    <p class="lead mb-0">Enhanced permissions and access control system</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <!-- User Panel -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-user me-2"></i>
+                                User Panel
+                            </h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="user-info mb-4">
+                                <div class="user-avatar" id="userAvatar">U</div>
+                                <h4 class="user-name" id="userName">User</h4>
+                                <span class="badge bg-secondary" id="userRole">Not authenticated</span>
+                                <p class="text-muted mt-2" id="userDepartment">-</p>
+                            </div>
+                            
+                            <div class="role-selector mb-4">
+                                <div class="mb-3">
+                                    <label for="roleSelect" class="form-label">Select Role</label>
+                                    <select class="form-select" id="roleSelect">
+                                        <option value="administrador">Administrator</option>
+                                        <option value="talentos_humanos">Recruiter</option>
+                                        <option value="hiring_manager">Hiring Manager</option>
+                                        <option value="usuario">User</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="departmentSelect" class="form-label">Select Department</label>
+                                    <select class="form-select" id="departmentSelect">
+                                        <option value="tecnologia">Technology</option>
+                                        <option value="marketing">Marketing</option>
+                                        <option value="finanzas">Finance</option>
+                                        <option value="recursos_humanos">Human Resources</option>
+                                        <option value="operaciones">Operations</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success" id="loginBtn">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Log In
+                                </button>
+                                <button class="btn btn-danger" id="logoutBtn">
+                                    <i class="fas fa-sign-out-alt me-1"></i> Log Out
+                                </button>
+                                <button class="btn btn-info" id="updateBtn">
+                                    <i class="fas fa-sync-alt me-1"></i> Update Information
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Content Panel -->
+                <div class="col-lg-8">
+                    <!-- Permission Tests -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                Permission Tests
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="card bg-light h-100">
+                                        <div class="card-body text-center">
+                                            <h6>Administrator Access</h6>
+                                            <p class="text-muted mb-2">Can access?</p>
+                                            <div class="test-result" id="adminTest">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card bg-light h-100">
+                                        <div class="card-body text-center">
+                                            <h6>Recruiter Access</h6>
+                                            <p class="text-muted mb-2">Can access?</p>
+                                            <div class="test-result" id="recruiterTest">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card bg-light h-100">
+                                        <div class="card-body text-center">
+                                            <h6>Hiring Manager Access</h6>
+                                            <p class="text-muted mb-2">Can access?</p>
+                                            <div class="test-result" id="hiringManagerTest">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card bg-light h-100">
+                                        <div class="card-body text-center">
+                                            <h6>User Access</h6>
+                                            <p class="text-muted mb-2">Can access?</p>
+                                            <div class="test-result" id="userTest">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Features -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list-check me-2"></i>
+                                Role System Features
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Multiple role and permission management
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Department-based access control
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Built-in permission hierarchy
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Route guards for view protection
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Content filtering by department
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Toast notification system
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // js/roles.js - Enhanced version
+        const ROLES = {
+            ADMIN: 'administrator',
+            RECRUITER: 'talentos_humanos',
+            HIRING_MANAGER: 'hiring_manager',
+            USER: 'user'
+        };
+
+        const DEPARTMENTS = {
+            TECHNOLOGY: 'technology',
+            MARKETING: 'marketing',
+            FINANCE: 'finance',
+            HR: 'human_resources',
+            OPERATIONS: 'operations'
+        };
+
+        // Utility function to get user data
+        const getUserData = () => {
+            try {
+                return JSON.parse(localStorage.getItem('userData') || '{}');
+            } catch (error) {
+                console.error('Error getting user data:', error);
+                return {};
+            }
+        };
+
+        // Utility function to check authentication
+        const isAuthenticated = () => {
+            return localStorage.getItem('isAuthenticated') === 'true';
+        };
+
+        const checkRole = (requiredRole) => {
+            const userData = getUserData();
+            return userData.role === requiredRole;
+        };
+
+        const hasPermission = (requiredRole, department = null) => {
+            if (!requiredRole) return true;
+
+            const userData = getUserData();
+
+            // Permission hierarchy
+            const roleHierarchy = {
+                [ROLES.ADMIN]: [ROLES.ADMIN, ROLES.RECRUITER, ROLES.HIRING_MANAGER, ROLES.USER],
+                [ROLES.RECRUITER]: [ROLES.RECRUITER, ROLES.HIRING_MANAGER, ROLES.USER],
+                [ROLES.HIRING_MANAGER]: [ROLES.HIRING_MANAGER, ROLES.USER],
+                [ROLES.USER]: [ROLES.USER]
+            };
+
+            // If user has no role, no permissions
+            if (!userData.role) return false;
+
+            const hasRolePermission = roleHierarchy[userData.role]?.includes(requiredRole) || false;
+            
+            // If a department is specified, verify user has access to that department
+            if (department && userData.role === ROLES.HIRING_MANAGER) {
+                return hasRolePermission && userData.department === department;
+            }
+            
+            return hasRolePermission;
+        };
+
+        const routeGuard = (requiredRole, department = null, redirectPath = '/index.html') => {
+            return (to, from, next) => {
+                if (!isAuthenticated()) {
+                    // Redirect to login if not authenticated
+                    showToast('You must log in to access this page', 'error');
+                    next(redirectPath);
+                    return;
+                }
+
+                const userData = getUserData();
+                
+                // If no user data despite being authenticated
+                if (!userData || Object.keys(userData).length === 0) {
+                    showToast('Error in user data', 'error');
+                    next(redirectPath);
+                    return;
+                }
+
+                if (requiredRole && !hasPermission(requiredRole, department)) {
+                    // Redirect to access denied page or home
+                    showToast('You do not have permission to access this page', 'error');
+                    next(redirectPath);
+                    return;
+                }
+
+                next();
+            };
+        };
+
+        // Function to filter job postings by Hiring Manager's department
+        const filterJobsByDepartment = (jobs) => {
+            const userData = getUserData();
+            
+            if (userData.role === ROLES.HIRING_MANAGER && userData.department) {
+                return jobs.filter(job => job.department === userData.department);
+            }
+            
+            return jobs;
+        };
+
+        // Function to filter candidates by Hiring Manager's department
+        const filterCandidatesByDepartment = (candidates) => {
+            const userData = getUserData();
+            
+            if (userData.role === ROLES.HIRING_MANAGER && userData.department) {
+                return candidates.filter(candidate => candidate.department === userData.department);
+            }
+            
+            return candidates;
+        };
+
+        // Additional function to get current user's role
+        const getCurrentUserRole = () => {
+            const userData = getUserData();
+            return userData.role || null;
+        };
+
+        // Additional function to get current user's department
+        const getCurrentUserDepartment = () => {
+            const userData = getUserData();
+            return userData.department || null;
+        };
+
+        // Function to show toast notifications
+        const showToast = (message, type = 'success') => {
+            // Toast notification implementation
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        };
+
+        // Code for demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const updateBtn = document.getElementById('updateBtn');
+            const roleSelect = document.getElementById('roleSelect');
+            const departmentSelect = document.getElementById('departmentSelect');
+            
+            // Update UI based on authentication status
+            updateUI();
+            
+            // Set up event listeners
+            loginBtn.addEventListener('click', function() {
+                const role = roleSelect.value;
+                const department = departmentSelect.value;
+                
+                localStorage.setItem('userData', JSON.stringify({
+                    role: role,
+                    department: department,
+                    name: role.charAt(0).toUpperCase() + role.slice(1)
+                }));
+                
+                localStorage.setItem('isAuthenticated', 'true');
+                
+                showToast('Session started successfully', 'success');
+                updateUI();
+            });
+            
+            logoutBtn.addEventListener('click', function() {
+                localStorage.removeItem('userData');
+                localStorage.setItem('isAuthenticated', 'false');
+                
+                showToast('Session closed successfully', 'info');
+                updateUI();
+            });
+            
+            updateBtn.addEventListener('click', function() {
+                updateUI();
+            });
+            
+            // Function to update the UI
+            function updateUI() {
+                const isAuth = isAuthenticated();
+                const userData = getUserData();
+                
+                // Update user information
+                if (isAuth && userData.role) {
+                    document.getElementById('userName').textContent = userData.name || 'User';
+                    document.getElementById('userRole').textContent = userData.role;
+                    document.getElementById('userDepartment').textContent = userData.department || '-';
+                    document.getElementById('userAvatar').textContent = userData.role.charAt(0).toUpperCase();
+                    
+                    // Update colors based on role
+                    const role = userData.role;
+                    const avatar = document.getElementById('userAvatar');
+                    
+                    if (role === ROLES.ADMIN) {
+                        avatar.style.background = '#ef4444';
+                    } else if (role === ROLES.RECRUITER) {
+                        avatar.style.background = '#3b82f6';
+                    } else if (role === ROLES.HIRING_MANAGER) {
+                        avatar.style.background = '#10b981';
+                    } else {
+                        avatar.style.background = '#6b7280';
+                    }
+                } else {
+                    document.getElementById('userName').textContent = 'User';
+                    document.getElementById('userRole').textContent = 'Not authenticated';
+                    document.getElementById('userDepartment').textContent = '-';
+                    document.getElementById('userAvatar').textContent = 'U';
+                    document.getElementById('userAvatar').style.background = '#6a11cb';
+                }
+                
+                // Update permission tests
+                updatePermissionTests();
+            }
+            
+            // Function to update permission tests
+            function updatePermissionTests() {
+                const adminTest = document.getElementById('adminTest');
+                const recruiterTest = document.getElementById('recruiterTest');
+                const hiringManagerTest = document.getElementById('hiringManagerTest');
+                const userTest = document.getElementById('userTest');
+                
+                adminTest.textContent = hasPermission(ROLES.ADMIN) ? 'Yes' : 'No';
+                adminTest.className = 'test-result ' + (hasPermission(ROLES.ADMIN) ? 'success' : 'error');
+                
+                recruiterTest.textContent = hasPermission(ROLES.RECRUITER) ? 'Yes' : 'No';
+                recruiterTest.className = 'test-result ' + (hasPermission(ROLES.RECRUITER) ? 'success' : 'error');
+                
+                hiringManagerTest.textContent = hasPermission(ROLES.HIRING_MANAGER) ? 'Yes' : 'No';
+                hiringManagerTest.className = 'test-result ' + (hasPermission(ROLES.HIRING_MANAGER) ? 'success' : 'error');
+                
+                userTest.textContent = hasPermission(ROLES.USER) ? 'Yes' : 'No';
+                userTest.className = 'test-result ' + (hasPermission(ROLES.USER) ? 'success' : 'error');
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Navigation and Authentication System -->
+    <script type="module">
+        import { initNavigation } from '../js/navigation.js';
+        import { updateAuthUI } from '../js/roles.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize navigation
+            initNavigation('roles', true);
+            
+            // Update authentication UI
+            updateAuthUI();
+            
+            console.log('✅ Navigation system initialized for pages/roles.html');
+        });
+    </script>
+</body>
+</html>
+```
